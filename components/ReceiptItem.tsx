@@ -5,26 +5,30 @@ import {getInitials, nameToColor} from "../utils/AvatarUtils";
 import {StyleSheet} from "react-native";
 import CircleAvatar from "./Avatar";
 import PersonOverview from "./PersonOverview";
+import {PersonType} from "../screens/ReceiptSplitScreen";
+import {calculateItemSplit} from "../utils/ReceiptItemUtils";
 
 type ReceiptItemProps = {
-    itemName: string,
-    itemPrice: number,
-    peoplePaying: string[]
+    name: string,
+    price: number,
+    party: PersonType[],
+    peoplePaying: boolean[]
 }
 
-export default function ReceiptItem({ itemName, itemPrice, peoplePaying} : ReceiptItemProps) {
+export default function ReceiptItem({ party, name, price, peoplePaying} : ReceiptItemProps) {
     const [isOpen, setIsOpen] = useState(false);
     const addAll = () => {
-        console.log(`Add all to ${itemName}`);
+        console.log(`Add all to ${name}`);
     }
 
     let subheaderContent;
 
     if(isOpen){
-        let rows = peoplePaying.map((person, i) => (
-            <View style={styles.subheaderRow} key={`${person}${i}`}>
+        let rows = peoplePaying.flatMap((isPaying, i) => (
+            (!isPaying) ? [] :
+            <View style={styles.subheaderRow} key={party[i].id}>
                 <IconButton icon={"minus"} color={Colors.blue300}/>
-                <PersonOverview name={person} amountOwed={itemPrice / peoplePaying.length}/>
+                <PersonOverview name={party[i].name} amountOwed={calculateItemSplit(price, peoplePaying)}/>
             </View>
         ));
 
@@ -42,8 +46,9 @@ export default function ReceiptItem({ itemName, itemPrice, peoplePaying} : Recei
             </>
         );
     }else{
-        let avatars = peoplePaying.map((person, i) => (
-            <CircleAvatar size={20} name={person} key={`${person}${i}`} style={styles.avatar}/>
+        let avatars = peoplePaying.flatMap((isPaying, i) => (
+            (!isPaying) ? [] :
+            <CircleAvatar size={20} name={party[i].name} key={party[i].id} style={styles.avatar}/>
         ));
         if(avatars.length > 3){
             avatars = avatars.slice(0, 3);
@@ -69,8 +74,8 @@ export default function ReceiptItem({ itemName, itemPrice, peoplePaying} : Recei
                         style={(isOpen) ? { transform: [{rotateZ: "90deg"}]} : {}}/>
             <View style={styles.infoContainer}>
                 <View style={styles.itemDescription}>
-                    <Text style={styles.itemName}>{itemName}</Text>
-                    <Text style={styles.itemPrice}>{`$${itemPrice.toFixed(2)}`}</Text>
+                    <Text style={styles.itemName}>{name}</Text>
+                    <Text style={styles.itemPrice}>{`$${price.toFixed(2)}`}</Text>
                 </View>
                 <View style={styles.subheader}>
                     {subheaderContent}
