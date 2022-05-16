@@ -5,29 +5,27 @@ import {getInitials, nameToColor} from "../utils/AvatarUtils";
 import {StyleSheet} from "react-native";
 import CircleAvatar from "./Avatar";
 import PersonOverview from "./PersonOverview";
-import {PersonType} from "../screens/ReceiptSplitScreen";
+import {PersonType, ReceiptItemType} from "../screens/ReceiptSplitScreen";
 import {calculateItemSplit} from "../utils/ReceiptItemUtils";
 
 type ReceiptItemProps = {
     name: string,
     price: number,
     party: PersonType[],
-    peoplePaying: boolean[]
+    peoplePaying: boolean[],
+    removePerson: (person: PersonType) => void,
+    addAll: () => void
 }
 
-export default function ReceiptItem({ party, name, price, peoplePaying} : ReceiptItemProps) {
+export default function ReceiptItem({ party, name, price, peoplePaying, removePerson, addAll} : ReceiptItemProps) {
     const [isOpen, setIsOpen] = useState(false);
-    const addAll = () => {
-        console.log(`Add all to ${name}`);
-    }
 
     let subheaderContent;
-
     if(isOpen){
         let rows = peoplePaying.flatMap((isPaying, i) => (
             (!isPaying) ? [] :
             <View style={styles.subheaderRow} key={party[i].id}>
-                <IconButton icon={"minus"} color={Colors.blue300}/>
+                <IconButton icon={"minus"} color={Colors.blue300} onPress={() => removePerson(party[i])}/>
                 <PersonOverview name={party[i].name} amountOwed={calculateItemSplit(price, peoplePaying)}/>
             </View>
         ));

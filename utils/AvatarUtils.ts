@@ -1,4 +1,6 @@
 // From https://mui.com/material-ui/react-avatar/
+import {adjectives, animals, uniqueNamesGenerator} from "unique-names-generator";
+
 export function nameToColor(string: string) {
     let hash = 0;
     let i;
@@ -24,4 +26,13 @@ export function getInitials(name: string) {
     }else{
         return `${parts[0][0]}`;
     }
+}
+
+export function getRandomName() {
+    return uniqueNamesGenerator({
+        dictionaries: [adjectives, animals],
+        separator: " ",
+        length: 2,
+        style: "capital"
+    })
 }

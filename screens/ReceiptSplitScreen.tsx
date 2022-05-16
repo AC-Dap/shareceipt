@@ -7,6 +7,7 @@ import {useEffect, useMemo, useState} from "react";
 import 'react-native-get-random-values';
 import {nanoid} from "nanoid";
 import {calculateItemSplit} from "../utils/ReceiptItemUtils";
+import {getRandomName} from "../utils/AvatarUtils";
 
 export type PersonType = {
     id: string,
@@ -25,7 +26,7 @@ export default function ReceiptSplitScreen() {
     const [receiptItems, setReceiptItems] = useState<ReceiptItemType[]>([]);
 
     const addPerson = () => {
-        setParty([...party, {id: nanoid(), name: ""}]);
+        setParty([...party, {id: nanoid(), name: getRandomName()}]);
         setReceiptItems(receiptItems.map((item) => {
             item.peoplePaying.push(false);
             return item;
@@ -120,7 +121,10 @@ export default function ReceiptSplitScreen() {
             </View>
             <ScrollView style={styles.peopleScrollArea}>
                 {party.map((person, i) => (
-                    <PersonOverview name={person.name} amountOwed={receiptSplit[i]} key={person.id}/>
+                    <PersonOverview
+                        name={person.name} amountOwed={receiptSplit[i]} key={person.id}
+                        editable={true} onNameChange={(newName) => editPerson(person, newName)}
+                    />
                 ))}
             </ScrollView>
             <View style={styles.banner}>
@@ -137,8 +141,12 @@ export default function ReceiptSplitScreen() {
             </View>
             <ScrollView style={styles.receiptScrollArea}>
                 {receiptItems.map((item) => (
-                    <ReceiptItem party={party} key={item.id}
-                                 name={item.name} price={item.price} peoplePaying={item.peoplePaying}/>
+                    <ReceiptItem
+                        party={party} name={item.name} price={item.price} peoplePaying={item.peoplePaying}
+                        removePerson={(person) => removePersonFromItem(item, person)}
+                        addAll={() => addAllToItem(item)}
+                        key={item.id}
+                    />
                 ))}
             </ScrollView>
             <View style={[styles.banner, styles.footer]}>
