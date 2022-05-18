@@ -145,6 +145,7 @@ export default function ReceiptSplitScreen() {
                         party={party} name={item.name} price={item.price} peoplePaying={item.peoplePaying}
                         removePerson={(person) => removePersonFromItem(item, person)}
                         addAll={() => addAllToItem(item)}
+                        editable={true} onItemChange={(newName, newPrice) => editReceiptItem(item, newName, newPrice)}
                         key={item.id}
                     />
                 ))}

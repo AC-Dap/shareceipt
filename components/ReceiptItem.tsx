@@ -2,11 +2,12 @@ import {useState} from "react";
 import {Text, View} from "./Themed";
 import {Avatar, Button, Chip, Colors, IconButton} from "react-native-paper";
 import {getInitials, nameToColor} from "../utils/AvatarUtils";
-import {StyleSheet} from "react-native";
+import {StyleSheet, TouchableOpacity} from "react-native";
 import CircleAvatar from "./Avatar";
 import PersonOverview from "./PersonOverview";
 import {PersonType, ReceiptItemType} from "../screens/ReceiptSplitScreen";
 import {calculateItemSplit} from "../utils/ReceiptItemUtils";
+import TextInputDialog from "./TextInputDialog";
 
 type ReceiptItemProps = {
     name: string,
@@ -14,11 +15,27 @@ type ReceiptItemProps = {
     party: PersonType[],
     peoplePaying: boolean[],
     removePerson: (person: PersonType) => void,
-    addAll: () => void
+    addAll: () => void,
+    editable: boolean,
+    onItemChange: (newName: string, newPrice: number) => void
 }
 
-export default function ReceiptItem({ party, name, price, peoplePaying, removePerson, addAll} : ReceiptItemProps) {
+export default function ReceiptItem({ party, name, price, peoplePaying, removePerson, addAll, editable, onItemChange} : ReceiptItemProps) {
     const [isOpen, setIsOpen] = useState(false);
+
+    const [editingName, setEditingName] = useState(false);
+    const openNameDialog = () => {
+        if(editable) setEditingName(true);
+    }
+    const closeNameDialog = () => setEditingName(false);
+    const submitNameDialog = (newName: string) => onItemChange(newName, price);
+
+    const [editingPrice, setEditingPrice] = useState(false);
+    const openPriceDialog = () => {
+        if(editable) setEditingPrice(true);
+    }
+    const closePriceDialog = () => setEditingPrice(false);
+    const submitPriceDialog = (newPrice: string) => onItemChange(name, parseFloat(newPrice));
 
     let subheaderContent;
     if(isOpen){
@@ -72,15 +89,34 @@ export default function ReceiptItem({ party, name, price, peoplePaying, removePe
                         style={(isOpen) ? { transform: [{rotateZ: "90deg"}]} : {}}/>
             <View style={styles.infoContainer}>
                 <View style={styles.itemDescription}>
-                    <Text style={styles.itemName}>{name}</Text>
-                    <Text style={styles.itemPrice}>{`$${price.toFixed(2)}`}</Text>
+                    <TouchableOpacity onPress={openNameDialog} style={styles.itemName}>
+                        <Text>{name}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={openPriceDialog} style={styles.itemPrice}>
+                        <Text>{`$${price.toFixed(2)}`}</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.subheader}>
                     {subheaderContent}
                 </View>
             </View>
+
+            <TextInputDialog
+                visible={editingName} onClose={closeNameDialog}
+                title={"Edit Name"} subtitle={"New name:"} submitInput={submitNameDialog}
+            />
+            <TextInputDialog
+                visible={editingPrice} onClose={closePriceDialog}
+                title={"Edit Price"} subtitle={"New price:"} submitInput={submitPriceDialog}
+                keyboardType={"numeric"}
+            />
         </View>
     );
+}
+
+ReceiptItem.defaultProps = {
+    editable: false,
+    onItemChange: () => {}
 }
 
 const styles = StyleSheet.create({

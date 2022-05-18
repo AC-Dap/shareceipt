@@ -1,16 +1,18 @@
 import {Button, Dialog, Portal, TextInput} from "react-native-paper";
 import {Text} from "./Themed"
 import {useState} from "react";
+import {KeyboardTypeOptions} from "react-native";
 
 type TextInputDialog = {
     visible: boolean,
     onClose: () => void,
     title: string,
     subtitle: string,
-    submitInput: (input: string) => void
+    submitInput: (input: string) => void,
+    keyboardType: KeyboardTypeOptions
 }
 
-export default function TextInputDialog({visible, onClose, title, subtitle, submitInput}: TextInputDialog) {
+export default function TextInputDialog({visible, onClose, title, subtitle, submitInput, keyboardType}: TextInputDialog) {
     const [input, setInput] = useState("");
 
     const onSubmit = () => {
@@ -27,6 +29,7 @@ export default function TextInputDialog({visible, onClose, title, subtitle, subm
                     <TextInput
                         value={input}
                         onChangeText={inp => setInput(inp)}
+                        keyboardType={keyboardType}
                     />
                 </Dialog.Content>
 
@@ -37,4 +40,8 @@ export default function TextInputDialog({visible, onClose, title, subtitle, subm
             </Dialog>
         </Portal>
     );
+}
+
+TextInputDialog.defaultProps = {
+    keyboardType: "default"
 }
