@@ -3,10 +3,10 @@ import {SafeAreaView, ScrollView, StatusBar, StyleSheet} from "react-native";
 import PersonOverview from "../components/PersonOverview";
 import {IconButton} from "react-native-paper";
 import ReceiptItem from "../components/ReceiptItem";
-import {useEffect, useMemo, useState} from "react";
+import {useMemo, useState} from "react";
 import 'react-native-get-random-values';
 import {nanoid} from "nanoid";
-import {calculateItemSplit} from "../utils/ReceiptItemUtils";
+import {calculateItemSplit, getRandomItemName} from "../utils/ReceiptItemUtils";
 import {getRandomName} from "../utils/AvatarUtils";
 
 export type PersonType = {
@@ -52,7 +52,10 @@ export default function ReceiptSplitScreen() {
 
     const addReceiptItem = () => {
         setReceiptItems([...receiptItems, {
-            id: nanoid(), name: "", price: 0, peoplePaying: new Array(party.length).fill(false)
+            id: nanoid(),
+            name: getRandomItemName(),
+            price: 0,
+            peoplePaying: new Array(party.length).fill(false)
         }]);
     }
     const editReceiptItem = (item: ReceiptItemType, newName: string, newPrice: number) => {

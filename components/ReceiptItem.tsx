@@ -1,11 +1,10 @@
 import {useState} from "react";
 import {Text, View} from "./Themed";
-import {Avatar, Button, Chip, Colors, IconButton} from "react-native-paper";
-import {getInitials, nameToColor} from "../utils/AvatarUtils";
+import {Chip, Colors, IconButton} from "react-native-paper";
 import {StyleSheet, TouchableOpacity} from "react-native";
 import CircleAvatar from "./Avatar";
 import PersonOverview from "./PersonOverview";
-import {PersonType, ReceiptItemType} from "../screens/ReceiptSplitScreen";
+import {PersonType} from "../screens/ReceiptSplitScreen";
 import {calculateItemSplit} from "../utils/ReceiptItemUtils";
 import TextInputDialog from "./TextInputDialog";
 

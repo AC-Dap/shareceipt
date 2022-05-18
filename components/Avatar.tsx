@@ -1,6 +1,6 @@
 import {Avatar, Colors} from "react-native-paper";
 import {getInitials, nameToColor} from "../utils/AvatarUtils";
-import {StyleProp, StyleSheet, ViewStyle} from "react-native";
+import {StyleProp, ViewStyle} from "react-native";
 
 type CircleAvatarProps = {
     size: number,
