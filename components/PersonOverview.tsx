@@ -1,6 +1,6 @@
 import {View, Text} from "./Themed";
 import {StyleSheet, TouchableOpacity} from "react-native";
-import CircleAvatar from "./Avatar";
+import CircleAvatar from "./CircleAvatar";
 import {useState} from "react";
 import TextInputDialog from "./TextInputDialog";
 
@@ -30,7 +30,7 @@ export default function PersonOverview({ name, amountOwed, editable, onNameChang
 
             <TextInputDialog
                 visible={editingName} onClose={closeDialog}
-                title={"Edit Name"} subtitle={"Name:"} submitInput={onNameChange}
+                title={"Edit Name"} subtitle={"Name"} submitInput={onNameChange}
             />
         </View>
     );

@@ -12,7 +12,9 @@ type TextInputDialog = {
     keyboardType: KeyboardTypeOptions
 }
 
-export default function TextInputDialog({visible, onClose, title, subtitle, submitInput, keyboardType}: TextInputDialog) {
+// Moving this into separate component fixes this weird bug
+// https://github.com/callstack/react-native-paper/issues/1668
+function MainPortalComponent({visible, onClose, title, subtitle, submitInput, keyboardType}: TextInputDialog){
     const [input, setInput] = useState("");
 
     const onSubmit = () => {
@@ -21,25 +23,31 @@ export default function TextInputDialog({visible, onClose, title, subtitle, subm
     }
 
     return (
-        <Portal>
-            <Dialog visible={visible} onDismiss={onClose}>
-                <Dialog.Title><Text>{title}</Text></Dialog.Title>
-                <Dialog.Content>
-                    <Text>{subtitle}</Text>
-                    <TextInput
-                        value={input}
-                        onChangeText={inp => setInput(inp)}
-                        keyboardType={keyboardType}
-                    />
-                </Dialog.Content>
+         <Dialog visible={visible} onDismiss={onClose}>
+            <Dialog.Title><Text>{title}</Text></Dialog.Title>
+            <Dialog.Content>
+                <TextInput
+                    label={subtitle}
+                    value={input}
+                    onChangeText={input => setInput(input)}
+                    keyboardType={keyboardType}
+                />
+            </Dialog.Content>
 
-                <Dialog.Actions>
-                    <Button onPress={onClose}><Text>Cancel</Text></Button>
-                    <Button onPress={onSubmit}><Text>Submit</Text></Button>
-                </Dialog.Actions>
-            </Dialog>
-        </Portal>
+            <Dialog.Actions>
+                <Button onPress={onClose}><Text>Cancel</Text></Button>
+                <Button onPress={onSubmit}><Text>Submit</Text></Button>
+            </Dialog.Actions>
+        </Dialog>
     );
+}
+
+export default function TextInputDialog(props: TextInputDialog) {
+    return (
+        <Portal>
+            <MainPortalComponent {...props} />
+        </Portal>
+    )
 }
 
 TextInputDialog.defaultProps = {

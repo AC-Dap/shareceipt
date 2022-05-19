@@ -2,7 +2,7 @@ import {useState} from "react";
 import {Text, View} from "./Themed";
 import {Chip, Colors, IconButton} from "react-native-paper";
 import {StyleSheet, TouchableOpacity} from "react-native";
-import CircleAvatar from "./Avatar";
+import CircleAvatar from "./CircleAvatar";
 import PersonOverview from "./PersonOverview";
 import {PersonType} from "../screens/ReceiptSplitScreen";
 import {calculateItemSplit} from "../utils/ReceiptItemUtils";
@@ -102,11 +102,11 @@ export default function ReceiptItem({ party, name, price, peoplePaying, removePe
 
             <TextInputDialog
                 visible={editingName} onClose={closeNameDialog}
-                title={"Edit Name"} subtitle={"New name:"} submitInput={submitNameDialog}
+                title={"Edit Name"} subtitle={"New name"} submitInput={submitNameDialog}
             />
             <TextInputDialog
                 visible={editingPrice} onClose={closePriceDialog}
-                title={"Edit Price"} subtitle={"New price:"} submitInput={submitPriceDialog}
+                title={"Edit Price"} subtitle={"New price"} submitInput={submitPriceDialog}
                 keyboardType={"numeric"}
             />
         </View>

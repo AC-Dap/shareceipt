@@ -1,13 +1,14 @@
 import {Text, View} from "../components/Themed";
 import {SafeAreaView, ScrollView, StatusBar, StyleSheet} from "react-native";
 import PersonOverview from "../components/PersonOverview";
-import {IconButton} from "react-native-paper";
+import {Button, Dialog, IconButton, Modal, Portal, TextInput} from "react-native-paper";
 import ReceiptItem from "../components/ReceiptItem";
 import {useMemo, useState} from "react";
 import 'react-native-get-random-values';
 import {nanoid} from "nanoid";
 import {calculateItemSplit, getRandomItemName} from "../utils/ReceiptItemUtils";
 import {getRandomName} from "../utils/AvatarUtils";
+import EditListDialog from "../components/EditListDialog";
 
 export type PersonType = {
     id: string,
@@ -25,6 +26,36 @@ export default function ReceiptSplitScreen() {
     const [party, setParty] = useState<PersonType[]>([]);
     const [receiptItems, setReceiptItems] = useState<ReceiptItemType[]>([]);
 
+    const [showEditPartyModal, setShowEditPartyModal] = useState(false);
+    const openEditPartyModal = () => {
+        setShowEditPartyModal(true);
+    }
+    const closeEditPartyModal = () => {
+        setShowEditPartyModal(false);
+    }
+    const submitEditPartyModal = (toRemove: boolean[]) => {
+        let people: PersonType[] = []
+        toRemove.forEach((remove, i) => {
+            if(remove) people.push(party[i]);
+        });
+        removePeople(people);
+    }
+
+    const [showEditReceiptModal, setShowEditReceiptModal] = useState(false);
+    const openEditReceiptModal = () => {
+        setShowEditReceiptModal(true);
+    }
+    const closeEditReceiptModal = () => {
+        setShowEditReceiptModal(false);
+    }
+    const submitEditReceiptModal = (toRemove: boolean[]) => {
+        let items: ReceiptItemType[] = []
+        toRemove.forEach((remove, i) => {
+            if(remove) items.push(receiptItems[i]);
+        });
+        removeReceiptItems(items);
+    }
+
     const addPerson = () => {
         setParty([...party, {id: nanoid(), name: getRandomName()}]);
         setReceiptItems(receiptItems.map((item) => {
@@ -41,13 +72,18 @@ export default function ReceiptSplitScreen() {
             return el;
         }));
     }
-    const removePerson = (person: PersonType) => {
-        const index = party.indexOf(person);
-        setParty(party.filter((_, i) => i !== index));
-        setReceiptItems(receiptItems.map((item, i) => {
-            item.peoplePaying.splice(index, 1);
-            return item;
-        }));
+    const removePeople = (people: PersonType[]) => {
+        let newParty = party;
+        let newItems = receiptItems;
+
+        people.forEach((person) => {
+            const index = newParty.indexOf(person);
+            newParty.splice(index, 1);
+            receiptItems.forEach((item) => item.peoplePaying.splice(index, 1));
+        })
+
+        setParty(newParty);
+        setReceiptItems(newItems);
     }
 
     const addReceiptItem = () => {
@@ -68,8 +104,15 @@ export default function ReceiptSplitScreen() {
             return el;
         }));
     }
-    const removeReceiptItem = (item: ReceiptItemType) => {
-        setReceiptItems(receiptItems.filter((el) => el !== item));
+    const removeReceiptItems = (items: ReceiptItemType[]) => {
+        let newItems = receiptItems;
+
+        items.forEach((item) => {
+            const index = newItems.indexOf(item);
+            newItems.splice(index, 1);
+        })
+
+        setReceiptItems(newItems);
     }
     const addPersonToItem = (item: ReceiptItemType, person: PersonType) => {
         setReceiptItems(receiptItems.map((el) => {
@@ -116,11 +159,7 @@ export default function ReceiptSplitScreen() {
             <View style={styles.banner}>
                 <Text style={styles.bannerText}>Edit Partyyyyyy</Text>
                 <IconButton icon={"plus"} onPress={addPerson}/>
-                <IconButton icon={"minus"} onPress={() => {
-                    editPerson(party[0], "Bob James");
-                    editPerson(party[1], "Adam");
-                    editPerson(party[2], "Steeeeve Wander");
-                }}/>
+                <IconButton icon={"minus"} onPress={openEditPartyModal}/>
             </View>
             <ScrollView style={styles.peopleScrollArea}>
                 {party.map((person, i) => (
@@ -130,17 +169,12 @@ export default function ReceiptSplitScreen() {
                     />
                 ))}
             </ScrollView>
+
             <View style={styles.banner}>
                 <Text style={styles.bannerText}>Edit Receipt</Text>
                 <IconButton icon={"camera"} onPress={() => console.log("camera")}/>
                 <IconButton icon={"plus"} onPress={addReceiptItem}/>
-                <IconButton icon={"minus"} onPress={() => {
-                    editReceiptItem(receiptItems[0], "Pasta", 14.99);
-                    addAllToItem(receiptItems[0]);
-
-                    editReceiptItem(receiptItems[1], "Brownies", 3.99);
-                    addPersonToItem(receiptItems[1], party[2]);
-                }}/>
+                <IconButton icon={"minus"} onPress={openEditReceiptModal}/>
             </View>
             <ScrollView style={styles.receiptScrollArea}>
                 {receiptItems.map((item) => (
@@ -153,11 +187,28 @@ export default function ReceiptSplitScreen() {
                     />
                 ))}
             </ScrollView>
+
             <View style={[styles.banner, styles.footer]}>
                 <Text>Tax</Text>
                 <Text>Tip</Text>
                 <Text>Total</Text>
             </View>
+
+            <EditListDialog
+                title={"Remove party members"}
+                items={party.map((person) => person.name)}
+                visible={showEditPartyModal}
+                onClose={closeEditPartyModal}
+                onSubmit={submitEditPartyModal}
+            />
+
+            <EditListDialog
+                title={"Remove receipt items"}
+                items={receiptItems.map((item) => item.name)}
+                visible={showEditReceiptModal}
+                onClose={closeEditReceiptModal}
+                onSubmit={submitEditReceiptModal}
+            />
         </SafeAreaView>
     );
 }
