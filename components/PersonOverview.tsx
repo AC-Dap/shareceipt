@@ -45,7 +45,8 @@ const styles = StyleSheet.create({
     overviewContainer: {
         flex: 1,
         flexDirection: "row",
-        padding: 10
+        padding: 10,
+        backgroundColor: "transparent"
     },
     nameText: {
         marginLeft: 10

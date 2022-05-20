@@ -1,7 +1,7 @@
 import {Text, View} from "../components/Themed";
-import {SafeAreaView, ScrollView, StatusBar, StyleSheet} from "react-native";
+import {SafeAreaView, ScrollView, StatusBar, StyleSheet, TouchableOpacity} from "react-native";
 import PersonOverview from "../components/PersonOverview";
-import {Button, Dialog, IconButton, Modal, Portal, TextInput} from "react-native-paper";
+import {Button, Dialog, IconButton, Modal, Portal, Surface, TextInput, TouchableRipple} from "react-native-paper";
 import ReceiptItem from "../components/ReceiptItem";
 import {useMemo, useState} from "react";
 import 'react-native-get-random-values';
@@ -9,6 +9,7 @@ import {nanoid} from "nanoid";
 import {calculateItemSplit, getRandomItemName} from "../utils/ReceiptItemUtils";
 import {getRandomName} from "../utils/AvatarUtils";
 import EditListDialog from "../components/EditListDialog";
+import ReceiptOverviewFooter from "../components/ReceiptOverviewFooter";
 
 export type PersonType = {
     id: string,
@@ -154,19 +155,34 @@ export default function ReceiptSplitScreen() {
         return receiptSplit;
     }, [party, receiptItems]);
 
+    const [selectedPerson, setSelectedPerson] = useState<PersonType | null>(null);
+    const onSelectPerson = (person: PersonType) => {
+        if(person === selectedPerson){
+            setSelectedPerson(null);
+        }else{
+            setSelectedPerson(person);
+        }
+    }
+
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.banner}>
-                <Text style={styles.bannerText}>Edit Partyyyyyy</Text>
+                <Text style={styles.bannerText}>Edit Party</Text>
                 <IconButton icon={"plus"} onPress={addPerson}/>
                 <IconButton icon={"minus"} onPress={openEditPartyModal}/>
             </View>
             <ScrollView style={styles.peopleScrollArea}>
                 {party.map((person, i) => (
-                    <PersonOverview
-                        name={person.name} amountOwed={receiptSplit[i]} key={person.id}
-                        editable={true} onNameChange={(newName) => editPerson(person, newName)}
-                    />
+                    <TouchableOpacity
+                        onPress={() => onSelectPerson(person)} key={person.id}
+                        style={{backgroundColor: (person === selectedPerson)?"grey": "black"}}
+                    >
+                        <PersonOverview
+                            name={person.name} amountOwed={receiptSplit[i]}
+                            editable={selectedPerson === null} onNameChange={(newName) => editPerson(person, newName)}
+                        />
+                    </TouchableOpacity>
                 ))}
             </ScrollView>
 
@@ -178,21 +194,23 @@ export default function ReceiptSplitScreen() {
             </View>
             <ScrollView style={styles.receiptScrollArea}>
                 {receiptItems.map((item) => (
-                    <ReceiptItem
-                        party={party} name={item.name} price={item.price} peoplePaying={item.peoplePaying}
-                        removePerson={(person) => removePersonFromItem(item, person)}
-                        addAll={() => addAllToItem(item)}
-                        editable={true} onItemChange={(newName, newPrice) => editReceiptItem(item, newName, newPrice)}
+                    <TouchableRipple
+                        disabled={selectedPerson === null}
+                        onPress={() => addPersonToItem(item, selectedPerson!)}
                         key={item.id}
-                    />
+                    >
+                        <ReceiptItem
+                            party={party} name={item.name} price={item.price} peoplePaying={item.peoplePaying}
+                            removePerson={(person) => removePersonFromItem(item, person)}
+                            addAll={() => addAllToItem(item)}
+                            editable={selectedPerson === null}
+                            onItemChange={(newName, newPrice) => editReceiptItem(item, newName, newPrice)}
+                        />
+                    </TouchableRipple>
                 ))}
             </ScrollView>
 
-            <View style={[styles.banner, styles.footer]}>
-                <Text>Tax</Text>
-                <Text>Tip</Text>
-                <Text>Total</Text>
-            </View>
+            <ReceiptOverviewFooter items={receiptItems}/>
 
             <EditListDialog
                 title={"Remove party members"}
@@ -233,10 +251,5 @@ const styles = StyleSheet.create({
     },
     receiptScrollArea: {
         flex: 3
-    },
-    footer: {
-        marginTop: "auto",
-        justifyContent: "space-between",
-        padding: 10
     }
 });
