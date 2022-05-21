@@ -1,23 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { Provider as PaperProvider } from 'react-native-paper';
+import {StatusBar} from 'expo-status-bar';
+import {Provider as PaperProvider} from 'react-native-paper';
 
 import useCachedResources from './hooks/useCachedResources';
-import useColorScheme from './hooks/useColorScheme';
-import Navigation from './navigation';
+import ReceiptSplitScreen from "./screens/ReceiptSplitScreen";
+import {useColorScheme} from "react-native";
+import {ColorsDark, ColorsLight} from "./styling/StyleConstants";
 
 export default function App() {
-  const isLoadingComplete = useCachedResources();
-  const colorScheme = useColorScheme();
+    const isLoadingComplete = useCachedResources();
+    const colorScheme = useColorScheme();
+    const color = (colorScheme === "dark") ? ColorsDark.banner : ColorsLight.banner;
 
-  if (!isLoadingComplete) {
-    return null;
-  } else {
-    return (
-      <PaperProvider>
-        <Navigation colorScheme={colorScheme} />
-        <StatusBar />
-      </PaperProvider>
-    );
-  }
+    if (!isLoadingComplete) {
+        console.log("HI");
+        return null;
+    } else {
+        console.log(":(");
+        return (
+            <PaperProvider>
+                <ReceiptSplitScreen/>
+                <StatusBar backgroundColor={color}/>
+            </PaperProvider>
+        );
+    }
 }
