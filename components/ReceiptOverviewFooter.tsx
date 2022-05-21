@@ -1,8 +1,9 @@
-import {Text, View} from "./Themed";
 import {StyleSheet, TouchableOpacity} from "react-native";
 import {ReceiptItemType} from "../screens/ReceiptSplitScreen";
 import {useMemo, useState} from "react";
 import TextInputDialog from "./TextInputDialog";
+import Banner from "./theming/Banner";
+import ReceiptText from "./theming/ReceiptText";
 
 type ReceiptOverviewFooterProps = {
     items: ReceiptItemType[]
@@ -21,16 +22,16 @@ export default function ReceiptOverviewFooter({ items } : ReceiptOverviewFooterP
     const [showTipDialog, setShowTipDialog] = useState(false);
 
     return (
-        <View style={[styles.banner, styles.footer]}>
+        <Banner style={styles.footer}>
             <TouchableOpacity style={styles.textContainer} onPress={() => setShowTaxDialog(true)}>
-                <Text>{`Tax: ${taxPercent}%`}</Text>
-                <Text>{`($${(itemTotal * taxPercent / 100).toFixed(2)})`}</Text>
+                <ReceiptText>{`Tax: ${taxPercent}%`}</ReceiptText>
+                <ReceiptText>{`($${(itemTotal * taxPercent / 100).toFixed(2)})`}</ReceiptText>
             </TouchableOpacity>
             <TouchableOpacity style={styles.textContainer} onPress={() => setShowTipDialog(true)}>
-                <Text>{`Tax: ${tipPercent}%`}</Text>
-                <Text>{`($${(itemTotal * tipPercent / 100).toFixed(2)})`}</Text>
+                <ReceiptText>{`Tax: ${tipPercent}%`}</ReceiptText>
+                <ReceiptText>{`($${(itemTotal * tipPercent / 100).toFixed(2)})`}</ReceiptText>
             </TouchableOpacity>
-            <Text>{`Total: $${(itemTotal * (1 + (taxPercent + tipPercent)/ 100)).toFixed(2)}`}</Text>
+            <ReceiptText>{`Total: $${(itemTotal * (1 + (taxPercent + tipPercent)/ 100)).toFixed(2)}`}</ReceiptText>
 
             <TextInputDialog
                 title={"Edit Tax"} subtitle={"Tax"}
@@ -47,17 +48,11 @@ export default function ReceiptOverviewFooter({ items } : ReceiptOverviewFooterP
                 submitInput={(inp) => setTipPercent(parseFloat(inp))}
                 keyboardType={"numeric"}
             />
-        </View>
+        </Banner>
     );
 }
 
 const styles = StyleSheet.create({
-    banner: {
-        height: 50,
-        backgroundColor: "#0cb4ab",
-        flexDirection: "row",
-        alignItems: "center"
-    },
     footer: {
         marginTop: "auto",
         justifyContent: "space-between",

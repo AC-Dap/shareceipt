@@ -1,5 +1,4 @@
 import {useState} from "react";
-import {Text, View} from "./Themed";
 import {Chip, Colors, IconButton} from "react-native-paper";
 import {StyleSheet, TouchableOpacity} from "react-native";
 import CircleAvatar from "./CircleAvatar";
@@ -7,6 +6,9 @@ import PersonOverview from "./PersonOverview";
 import {PersonType} from "../screens/ReceiptSplitScreen";
 import {calculateItemSplit} from "../utils/ReceiptItemUtils";
 import TextInputDialog from "./TextInputDialog";
+import View from "./theming/View";
+import Text from "./theming/Text";
+import ReceiptText from "./theming/ReceiptText";
 
 type ReceiptItemProps = {
     name: string,
@@ -49,7 +51,7 @@ export default function ReceiptItem({ party, name, price, peoplePaying, removePe
         subheaderContent = (
             <>
                 <View style={styles.subheaderRow}>
-                    <Text>Shared with: </Text>
+                    <ReceiptText>Shared with: </ReceiptText>
                     <Chip icon={"plus"} mode={"flat"}
                           style={styles.addAllButton}
                           onPress={addAll}>
@@ -66,12 +68,12 @@ export default function ReceiptItem({ party, name, price, peoplePaying, removePe
         ));
         if(avatars.length > 3){
             avatars = avatars.slice(0, 3);
-            avatars.push(<Text style={styles.avatar} key={"dots"}>...</Text>);
+            avatars.push(<ReceiptText style={styles.avatar} key={"dots"}>...</ReceiptText>);
         }
 
         subheaderContent = (
             <View style={styles.subheaderRow}>
-                <Text>Shared with: </Text>
+                <ReceiptText>Shared with: </ReceiptText>
                 {avatars}
                 <Chip icon={"plus"} mode={"flat"}
                         style={styles.addAllButton}
@@ -89,10 +91,10 @@ export default function ReceiptItem({ party, name, price, peoplePaying, removePe
             <View style={styles.infoContainer}>
                 <View style={styles.itemDescription}>
                     <TouchableOpacity onPress={openNameDialog} style={styles.itemName}>
-                        <Text>{name}</Text>
+                        <ReceiptText>{name}</ReceiptText>
                     </TouchableOpacity>
                     <TouchableOpacity onPress={openPriceDialog} style={styles.itemPrice}>
-                        <Text>{`$${price.toFixed(2)}`}</Text>
+                        <ReceiptText>{`$${price.toFixed(2)}`}</ReceiptText>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.subheader}>

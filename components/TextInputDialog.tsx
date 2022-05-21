@@ -1,7 +1,7 @@
 import {Button, Dialog, Portal, TextInput} from "react-native-paper";
-import {Text} from "./Themed"
 import {useState} from "react";
 import {KeyboardTypeOptions} from "react-native";
+import Text from "./theming/Text";
 
 type TextInputDialog = {
     visible: boolean,

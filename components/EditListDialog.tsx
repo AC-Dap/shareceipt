@@ -1,6 +1,6 @@
 import {Button, Checkbox, Dialog, Portal} from "react-native-paper";
-import {Text} from "./Themed";
 import {useEffect, useState} from "react";
+import Text from "./theming/Text";
 
 type EditListDialogProps = {
     title: string,

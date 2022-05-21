@@ -1,7 +1,6 @@
-import {Text, View} from "../components/Themed";
-import {SafeAreaView, ScrollView, StatusBar, StyleSheet, TouchableOpacity} from "react-native";
+import {SafeAreaView, ScrollView, StatusBar, StyleSheet, TouchableOpacity, useColorScheme} from "react-native";
 import PersonOverview from "../components/PersonOverview";
-import {Button, Dialog, IconButton, Modal, Portal, Surface, TextInput, TouchableRipple} from "react-native-paper";
+import {IconButton, TouchableRipple} from "react-native-paper";
 import ReceiptItem from "../components/ReceiptItem";
 import {useMemo, useState} from "react";
 import 'react-native-get-random-values';
@@ -10,6 +9,9 @@ import {calculateItemSplit, getRandomItemName} from "../utils/ReceiptItemUtils";
 import {getRandomName} from "../utils/AvatarUtils";
 import EditListDialog from "../components/EditListDialog";
 import ReceiptOverviewFooter from "../components/ReceiptOverviewFooter";
+import useThemeColor from "../hooks/useThemeColor";
+import Banner from "../components/theming/Banner";
+import Text from "../components/theming/Text";
 
 export type PersonType = {
     id: string,
@@ -37,7 +39,7 @@ export default function ReceiptSplitScreen() {
     const submitEditPartyModal = (toRemove: boolean[]) => {
         let people: PersonType[] = []
         toRemove.forEach((remove, i) => {
-            if(remove) people.push(party[i]);
+            if (remove) people.push(party[i]);
         });
         removePeople(people);
     }
@@ -52,7 +54,7 @@ export default function ReceiptSplitScreen() {
     const submitEditReceiptModal = (toRemove: boolean[]) => {
         let items: ReceiptItemType[] = []
         toRemove.forEach((remove, i) => {
-            if(remove) items.push(receiptItems[i]);
+            if (remove) items.push(receiptItems[i]);
         });
         removeReceiptItems(items);
     }
@@ -66,7 +68,7 @@ export default function ReceiptSplitScreen() {
     }
     const editPerson = (person: PersonType, newName: string) => {
         setParty(party.map(el => {
-            if(el === person){
+            if (el === person) {
                 el.name = newName;
             }
 
@@ -97,7 +99,7 @@ export default function ReceiptSplitScreen() {
     }
     const editReceiptItem = (item: ReceiptItemType, newName: string, newPrice: number) => {
         setReceiptItems(receiptItems.map((el) => {
-            if(el === item){
+            if (el === item) {
                 el.name = newName;
                 el.price = newPrice;
             }
@@ -117,7 +119,7 @@ export default function ReceiptSplitScreen() {
     }
     const addPersonToItem = (item: ReceiptItemType, person: PersonType) => {
         setReceiptItems(receiptItems.map((el) => {
-            if(el === item){
+            if (el === item) {
                 el.peoplePaying[party.indexOf(person)] = true;
             }
 
@@ -126,7 +128,7 @@ export default function ReceiptSplitScreen() {
     }
     const removePersonFromItem = (item: ReceiptItemType, person: PersonType) => {
         setReceiptItems(receiptItems.map((el) => {
-            if(el === item){
+            if (el === item) {
                 el.peoplePaying[party.indexOf(person)] = false;
             }
 
@@ -135,7 +137,7 @@ export default function ReceiptSplitScreen() {
     }
     const addAllToItem = (item: ReceiptItemType) => {
         setReceiptItems(receiptItems.map((el) => {
-            if(el === item){
+            if (el === item) {
                 el.peoplePaying.fill(true);
             }
 
@@ -149,7 +151,7 @@ export default function ReceiptSplitScreen() {
         receiptItems.forEach((item => {
             const split = calculateItemSplit(item.price, item.peoplePaying);
             item.peoplePaying.forEach((isPaying, i) => {
-                if(isPaying) receiptSplit[i] += split;
+                if (isPaying) receiptSplit[i] += split;
             })
         }));
         return receiptSplit;
@@ -157,41 +159,42 @@ export default function ReceiptSplitScreen() {
 
     const [selectedPerson, setSelectedPerson] = useState<PersonType | null>(null);
     const onSelectPerson = (person: PersonType) => {
-        if(person === selectedPerson){
+        if (person === selectedPerson) {
             setSelectedPerson(null);
-        }else{
+        } else {
             setSelectedPerson(person);
         }
     }
 
-
+    const backgroundColor = useThemeColor("background");
     return (
-        <SafeAreaView style={styles.container}>
-            <View style={styles.banner}>
+        <SafeAreaView style={[{backgroundColor: backgroundColor}, styles.container]}>
+            <Banner>
                 <Text style={styles.bannerText}>Edit Party</Text>
                 <IconButton icon={"plus"} onPress={addPerson}/>
                 <IconButton icon={"minus"} onPress={openEditPartyModal}/>
-            </View>
+            </Banner>
             <ScrollView style={styles.peopleScrollArea}>
                 {party.map((person, i) => (
                     <TouchableOpacity
                         onPress={() => onSelectPerson(person)} key={person.id}
-                        style={{backgroundColor: (person === selectedPerson)?"grey": "black"}}
+                        style={{backgroundColor: (person === selectedPerson) ? "grey" : "black"}}
                     >
                         <PersonOverview
                             name={person.name} amountOwed={receiptSplit[i]}
-                            editable={selectedPerson === null} onNameChange={(newName) => editPerson(person, newName)}
+                            editable={selectedPerson === null}
+                            onNameChange={(newName) => editPerson(person, newName)}
                         />
                     </TouchableOpacity>
                 ))}
             </ScrollView>
 
-            <View style={styles.banner}>
+            <Banner>
                 <Text style={styles.bannerText}>Edit Receipt</Text>
                 <IconButton icon={"camera"} onPress={() => console.log("camera")}/>
                 <IconButton icon={"plus"} onPress={addReceiptItem}/>
                 <IconButton icon={"minus"} onPress={openEditReceiptModal}/>
-            </View>
+            </Banner>
             <ScrollView style={styles.receiptScrollArea}>
                 {receiptItems.map((item) => (
                     <TouchableRipple
@@ -235,12 +238,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingTop: StatusBar.currentHeight
-    },
-    banner: {
-        height: 50,
-        backgroundColor: "#0cb4ab",
-        flexDirection: "row",
-        alignItems: "center"
     },
     bannerText: {
         marginLeft: 10,
