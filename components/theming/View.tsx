@@ -1,5 +1,5 @@
-import {ViewProps} from "react-native";
+import {View as NativeView, ViewProps} from "react-native";
 
 export default function View({ style, ...props}: ViewProps) {
-    return <View style={[{backgroundColor: "transparent"}, style]} {...props}/>;
+    return <NativeView style={[{backgroundColor: "transparent"}, style]} {...props}/>;
 }

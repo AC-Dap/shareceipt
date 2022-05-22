@@ -9,7 +9,6 @@ export default function useCachedResources() {
   // Load any resources or data that we need prior to rendering the app
   useEffect(() => {
     async function loadResourcesAndDataAsync() {
-      console.log("Loading...");
       try {
         SplashScreen.preventAutoHideAsync();
 
@@ -21,11 +20,9 @@ export default function useCachedResources() {
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
-        console.log(e);
         console.warn(e);
       } finally {
         setLoadingComplete(true);
-        console.log("Complete!");
         SplashScreen.hideAsync();
       }
     }
