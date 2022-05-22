@@ -1,6 +1,7 @@
 import {Button, Checkbox, Dialog, Portal} from "react-native-paper";
 import {useEffect, useState} from "react";
-import Text from "./theming/Text";
+import {Text} from "./theming";
+import {Fonts} from "../styling/StyleConstants";
 
 type EditListDialogProps = {
     title: string,
@@ -33,10 +34,10 @@ export default function EditListDialog({title, items, visible, onClose, onSubmit
                 {items.map((item, i) => (
                     <Checkbox.Item
                         label={item}
-                        status={isChecked[i]? "checked" : "unchecked"}
+                        status={isChecked[i]? "indeterminate" : "unchecked"}
                         onPress={() => setChecked(i, !isChecked[i])}
                         position={"leading"}
-                        labelStyle={{textAlign: "left"}}
+                        labelStyle={{textAlign: "left", fontFamily: Fonts.normalFont}}
                         key={item}
                     />
                 ))}

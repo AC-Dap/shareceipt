@@ -2,8 +2,7 @@ import {StyleSheet, TouchableOpacity} from "react-native";
 import CircleAvatar from "./CircleAvatar";
 import {useState} from "react";
 import TextInputDialog from "./TextInputDialog";
-import View from "./theming/View";
-import ReceiptText from "./theming/ReceiptText";
+import {View, ReceiptText} from "./theming";
 
 type PersonOverviewProps = {
     name: string,
@@ -46,6 +45,7 @@ const styles = StyleSheet.create({
     overviewContainer: {
         flex: 1,
         flexDirection: "row",
+        alignItems: "center",
         padding: 10,
         backgroundColor: "transparent"
     },

@@ -2,16 +2,17 @@ import {StyleSheet, TouchableOpacity} from "react-native";
 import {ReceiptItemType} from "../screens/ReceiptSplitScreen";
 import {useMemo, useState} from "react";
 import TextInputDialog from "./TextInputDialog";
-import Banner from "./theming/Banner";
-import ReceiptText from "./theming/ReceiptText";
+import {Text, Banner} from "./theming";
 
 type ReceiptOverviewFooterProps = {
-    items: ReceiptItemType[]
+    items: ReceiptItemType[],
+    taxPercent: number
+    tipPercent: number,
+    setTaxPercent: (newVal: number) => void,
+    setTipPercent: (newVal: number) => void
 }
 
-export default function ReceiptOverviewFooter({ items } : ReceiptOverviewFooterProps){
-    const [taxPercent, setTaxPercent] = useState(6.25);
-    const [tipPercent, setTipPercent] = useState(10);
+export default function ReceiptOverviewFooter({ items, taxPercent, tipPercent, setTaxPercent, setTipPercent } : ReceiptOverviewFooterProps){
     const itemTotal = useMemo(() => {
         let sum = 0;
         items.forEach((item) => sum += item.price);
@@ -24,17 +25,17 @@ export default function ReceiptOverviewFooter({ items } : ReceiptOverviewFooterP
     return (
         <Banner style={styles.footer}>
             <TouchableOpacity style={styles.textContainer} onPress={() => setShowTaxDialog(true)}>
-                <ReceiptText>{`Tax: ${taxPercent}%`}</ReceiptText>
-                <ReceiptText>{`($${(itemTotal * taxPercent / 100).toFixed(2)})`}</ReceiptText>
+                <Text>{`Tax: ${taxPercent}%`}</Text>
+                <Text>{`($${(itemTotal * taxPercent / 100).toFixed(2)})`}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.textContainer} onPress={() => setShowTipDialog(true)}>
-                <ReceiptText>{`Tax: ${tipPercent}%`}</ReceiptText>
-                <ReceiptText>{`($${(itemTotal * tipPercent / 100).toFixed(2)})`}</ReceiptText>
+                <Text>{`Tax: ${tipPercent}%`}</Text>
+                <Text>{`($${(itemTotal * tipPercent / 100).toFixed(2)})`}</Text>
             </TouchableOpacity>
-            <ReceiptText>{`Total: $${(itemTotal * (1 + (taxPercent + tipPercent)/ 100)).toFixed(2)}`}</ReceiptText>
+            <Text>{`Total: $${(itemTotal * (1 + (taxPercent + tipPercent)/ 100)).toFixed(2)}`}</Text>
 
             <TextInputDialog
-                title={"Edit Tax"} subtitle={"Tax"}
+                title={"Edit Tax Percentage"} subtitle={"Tax"}
                 visible={showTaxDialog}
                 onClose={() => setShowTaxDialog(false)}
                 submitInput={(inp) => setTaxPercent(parseFloat(inp))}
@@ -42,7 +43,7 @@ export default function ReceiptOverviewFooter({ items } : ReceiptOverviewFooterP
             />
 
             <TextInputDialog
-                title={"Edit Tip"} subtitle={"Tip"}
+                title={"Edit Tip Percentage"} subtitle={"Tip"}
                 visible={showTipDialog}
                 onClose={() => setShowTipDialog(false)}
                 submitInput={(inp) => setTipPercent(parseFloat(inp))}

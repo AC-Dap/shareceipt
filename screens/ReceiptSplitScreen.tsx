@@ -10,8 +10,7 @@ import {getRandomName} from "../utils/AvatarUtils";
 import EditListDialog from "../components/EditListDialog";
 import ReceiptOverviewFooter from "../components/ReceiptOverviewFooter";
 import useThemeColor from "../hooks/useThemeColor";
-import Banner from "../components/theming/Banner";
-import Text from "../components/theming/Text";
+import {Text, Banner} from "../components/theming";
 
 export type PersonType = {
     id: string,
@@ -145,6 +144,9 @@ export default function ReceiptSplitScreen() {
         }));
     }
 
+    const [taxPercent, setTaxPercent] = useState(6.25);
+    const [tipPercent, setTipPercent] = useState(15);
+
     // Update receiptSplit everytime receiptItems is updated
     const receiptSplit = useMemo(() => {
         let receiptSplit = (new Array(party.length)).fill(0);
@@ -154,8 +156,9 @@ export default function ReceiptSplitScreen() {
                 if (isPaying) receiptSplit[i] += split;
             })
         }));
+        for(let i = 0; i < receiptSplit.length; i++) receiptSplit[i] *= (1 + (taxPercent + tipPercent)/100);
         return receiptSplit;
-    }, [party, receiptItems]);
+    }, [party, receiptItems, taxPercent, tipPercent]);
 
     const [selectedPerson, setSelectedPerson] = useState<PersonType | null>(null);
     const onSelectPerson = (person: PersonType) => {
@@ -167,6 +170,8 @@ export default function ReceiptSplitScreen() {
     }
 
     const backgroundColor = useThemeColor("background");
+    const highlightColor = useThemeColor("highlight");
+
     return (
         <SafeAreaView style={[{backgroundColor: backgroundColor}, styles.container]}>
             <Banner>
@@ -178,7 +183,7 @@ export default function ReceiptSplitScreen() {
                 {party.map((person, i) => (
                     <TouchableOpacity
                         onPress={() => onSelectPerson(person)} key={person.id}
-                        style={{backgroundColor: (person === selectedPerson) ? "grey" : "black"}}
+                        style={{backgroundColor: (person === selectedPerson) ? highlightColor : "transparent"}}
                     >
                         <PersonOverview
                             name={person.name} amountOwed={receiptSplit[i]}
@@ -213,7 +218,11 @@ export default function ReceiptSplitScreen() {
                 ))}
             </ScrollView>
 
-            <ReceiptOverviewFooter items={receiptItems}/>
+            <ReceiptOverviewFooter
+                items={receiptItems}
+                taxPercent={taxPercent} setTaxPercent={(newVal) => setTaxPercent(newVal)}
+                tipPercent={tipPercent} setTipPercent={(newVal) => setTipPercent(newVal)}
+            />
 
             <EditListDialog
                 title={"Remove party members"}
@@ -241,7 +250,8 @@ const styles = StyleSheet.create({
     },
     bannerText: {
         marginLeft: 10,
-        marginRight: "auto"
+        marginRight: "auto",
+        fontSize: 18
     },
     peopleScrollArea: {
         flex: 2

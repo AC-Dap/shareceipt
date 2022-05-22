@@ -6,9 +6,8 @@ import PersonOverview from "./PersonOverview";
 import {PersonType} from "../screens/ReceiptSplitScreen";
 import {calculateItemSplit} from "../utils/ReceiptItemUtils";
 import TextInputDialog from "./TextInputDialog";
-import View from "./theming/View";
-import Text from "./theming/Text";
-import ReceiptText from "./theming/ReceiptText";
+import {View, Text, ReceiptText} from "./theming";
+import useThemeColor from "../hooks/useThemeColor";
 
 type ReceiptItemProps = {
     name: string,
@@ -38,12 +37,14 @@ export default function ReceiptItem({ party, name, price, peoplePaying, removePe
     const closePriceDialog = () => setEditingPrice(false);
     const submitPriceDialog = (newPrice: string) => onItemChange(name, parseFloat(newPrice));
 
+    const smallBtnColors = useThemeColor('text');
+    const addAllBtnColor = useThemeColor('banner');
     let subheaderContent;
     if(isOpen){
         let rows = peoplePaying.flatMap((isPaying, i) => (
             (!isPaying) ? [] :
             <View style={styles.subheaderRow} key={party[i].id}>
-                <IconButton icon={"minus"} color={Colors.blue300} onPress={() => removePerson(party[i])}/>
+                <IconButton icon={"minus"} color={smallBtnColors} onPress={() => removePerson(party[i])}/>
                 <PersonOverview name={party[i].name} amountOwed={calculateItemSplit(price, peoplePaying)}/>
             </View>
         ));
@@ -53,7 +54,7 @@ export default function ReceiptItem({ party, name, price, peoplePaying, removePe
                 <View style={styles.subheaderRow}>
                     <ReceiptText>Shared with: </ReceiptText>
                     <Chip icon={"plus"} mode={"flat"}
-                          style={styles.addAllButton}
+                          style={[{backgroundColor: addAllBtnColor}, styles.addAllButton]}
                           onPress={addAll}>
                         <Text style={styles.addAllText}>Add all</Text>
                     </Chip>
@@ -76,7 +77,7 @@ export default function ReceiptItem({ party, name, price, peoplePaying, removePe
                 <ReceiptText>Shared with: </ReceiptText>
                 {avatars}
                 <Chip icon={"plus"} mode={"flat"}
-                        style={styles.addAllButton}
+                        style={[{backgroundColor: addAllBtnColor}, styles.addAllButton]}
                         onPress={addAll}>
                     <Text style={styles.addAllText}>Add all</Text>
                 </Chip>
@@ -86,7 +87,7 @@ export default function ReceiptItem({ party, name, price, peoplePaying, removePe
 
     return (
         <View style={styles.container}>
-            <IconButton color={Colors.blue300} icon={"chevron-right"} onPress={() => setIsOpen(!isOpen)}
+            <IconButton color={smallBtnColors} icon={"chevron-right"} onPress={() => setIsOpen(!isOpen)}
                         style={(isOpen) ? { transform: [{rotateZ: "90deg"}]} : {}}/>
             <View style={styles.infoContainer}>
                 <View style={styles.itemDescription}>
@@ -104,11 +105,11 @@ export default function ReceiptItem({ party, name, price, peoplePaying, removePe
 
             <TextInputDialog
                 visible={editingName} onClose={closeNameDialog}
-                title={"Edit Name"} subtitle={"New name"} submitInput={submitNameDialog}
+                title={"Edit Name"} subtitle={"Name"} submitInput={submitNameDialog}
             />
             <TextInputDialog
                 visible={editingPrice} onClose={closePriceDialog}
-                title={"Edit Price"} subtitle={"New price"} submitInput={submitPriceDialog}
+                title={"Edit Price"} subtitle={"Price"} submitInput={submitPriceDialog}
                 keyboardType={"numeric"}
             />
         </View>
@@ -154,8 +155,7 @@ const styles = StyleSheet.create({
     addAllButton: {
         marginLeft: 15,
         height: 22,
-        justifyContent: "center",
-        backgroundColor: Colors.amber300
+        justifyContent: "center"
     },
     addAllText: {
         fontSize: 12
