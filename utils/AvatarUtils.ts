@@ -20,7 +20,7 @@ export function nameToColor(string: string) {
 }
 
 export function getInitials(name: string) {
-    const parts = name.split(' ');
+    const parts = name.toUpperCase().split(' ');
     if(parts.length > 1){
         return `${parts[0][0]}${parts[parts.length-1][0]}`
     }else{

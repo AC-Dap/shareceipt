@@ -188,7 +188,7 @@ export default function ReceiptSplitScreen() {
                         <PersonOverview
                             name={person.name} amountOwed={receiptSplit[i]}
                             editable={selectedPerson === null}
-                            onNameChange={(newName) => editPerson(person, newName)}
+                            onNameChange={(newName) => editPerson(person, newName.trim())}
                         />
                     </TouchableOpacity>
                 ))}
@@ -212,7 +212,7 @@ export default function ReceiptSplitScreen() {
                             removePerson={(person) => removePersonFromItem(item, person)}
                             addAll={() => addAllToItem(item)}
                             editable={selectedPerson === null}
-                            onItemChange={(newName, newPrice) => editReceiptItem(item, newName, newPrice)}
+                            onItemChange={(newName, newPrice) => editReceiptItem(item, newName.trim(), newPrice)}
                         />
                     </TouchableRipple>
                 ))}
