@@ -5,21 +5,25 @@ import {Text} from "./theming";
 
 type TextInputDialog = {
     visible: boolean,
-    onClose: () => void,
     title: string,
     subtitle: string,
-    submitInput: (input: string) => void,
+    onClose: () => void,
+    onSubmit: (input: string) => void,
     keyboardType: KeyboardTypeOptions
 }
 
 // Moving this into separate component fixes this weird bug
 // https://github.com/callstack/react-native-paper/issues/1668
-function MainPortalComponent({visible, onClose, title, subtitle, submitInput, keyboardType}: TextInputDialog){
+function MainPortalComponent({visible,title, subtitle, onClose,  onSubmit, keyboardType}: TextInputDialog){
     const [input, setInput] = useState("");
 
-    const onSubmit = () => {
+    const close = () => {
         onClose();
-        submitInput(input);
+        setInput("");
+    }
+    const submit = () => {
+        onSubmit(input);
+        close();
     }
 
     return (
@@ -35,8 +39,8 @@ function MainPortalComponent({visible, onClose, title, subtitle, submitInput, ke
             </Dialog.Content>
 
             <Dialog.Actions>
-                <Button onPress={onClose}><Text>Cancel</Text></Button>
-                <Button onPress={onSubmit}><Text>Submit</Text></Button>
+                <Button onPress={close}><Text>Cancel</Text></Button>
+                <Button onPress={submit}><Text>Submit</Text></Button>
             </Dialog.Actions>
         </Dialog>
     );
