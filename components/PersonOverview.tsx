@@ -29,8 +29,11 @@ export default function PersonOverview({ name, amountOwed, editable, onNameChang
             <ReceiptText style={styles.amountOwedText}>{`$${amountOwed.toFixed(2)}`}</ReceiptText>
 
             <TextInputDialog
-                visible={editingName} onClose={closeDialog}
-                title={"Edit Name"} subtitle={"Name"} submitInput={onNameChange}
+                visible={editingName}
+                title={"Edit Name"}
+                subtitle={"Name"}
+                onClose={closeDialog}
+                onSubmit={onNameChange}
             />
         </View>
     );

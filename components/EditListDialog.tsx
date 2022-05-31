@@ -13,16 +13,19 @@ type EditListDialogProps = {
 
 export default function EditListDialog({title, items, visible, onClose, onSubmit} : EditListDialogProps){
     const [isChecked, setIsChecked] = useState<boolean[]>([]);
+    useEffect(() => setIsChecked(new Array(items.length).fill(false)), [items]);
+
     const setChecked = (i: number, newState: boolean) => {
         setIsChecked(isChecked.map((_, j) => (i == j)? newState : isChecked[j]));
     }
-    useEffect(() => {
-        setIsChecked(new Array(items.length).fill(false));
-    }, [visible]);
 
-    const submit = () => {
+    const close = () => {
         onClose();
+        setIsChecked(new Array(items.length).fill(false));
+    }
+    const submit = () => {
         onSubmit(isChecked);
+        close();
     }
 
     return <Portal>
@@ -43,7 +46,7 @@ export default function EditListDialog({title, items, visible, onClose, onSubmit
                 ))}
             </Dialog.Content>
             <Dialog.Actions>
-                <Button onPress={onClose}><Text>Cancel</Text></Button>
+                <Button onPress={close}><Text>Cancel</Text></Button>
                 <Button onPress={submit}><Text>Submit</Text></Button>
             </Dialog.Actions>
         </Dialog>

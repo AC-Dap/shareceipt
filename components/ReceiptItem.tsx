@@ -104,12 +104,18 @@ export default function ReceiptItem({ party, name, price, peoplePaying, removePe
             </View>
 
             <TextInputDialog
-                visible={editingName} onClose={closeNameDialog}
-                title={"Edit Name"} subtitle={"Name"} submitInput={submitNameDialog}
+                visible={editingName}
+                title={"Edit Name"}
+                subtitle={"Name"}
+                onClose={closeNameDialog}
+                onSubmit={submitNameDialog}
             />
             <TextInputDialog
-                visible={editingPrice} onClose={closePriceDialog}
-                title={"Edit Price"} subtitle={"Price"} submitInput={submitPriceDialog}
+                visible={editingPrice}
+                title={"Edit Price"}
+                subtitle={"Price"}
+                onClose={closePriceDialog}
+                onSubmit={submitPriceDialog}
                 keyboardType={"numeric"}
             />
         </View>
