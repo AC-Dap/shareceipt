@@ -35,7 +35,7 @@ export default function ReceiptItem({ party, name, price, peoplePaying, removePe
         if(editable) setEditingPrice(true);
     }
     const closePriceDialog = () => setEditingPrice(false);
-    const submitPriceDialog = (newPrice: string) => onItemChange(name, parseFloat(newPrice));
+    const submitPriceDialog = (newPrice: string) => onItemChange(name, (newPrice == "")? 0 : parseFloat(newPrice));
 
     const smallBtnColors = useThemeColor('text');
     const addAllBtnColor = useThemeColor('banner');
