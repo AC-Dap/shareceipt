@@ -1,8 +1,8 @@
-import {SafeAreaView, ScrollView, StatusBar, StyleSheet, TouchableOpacity, useColorScheme} from "react-native";
+import {Image, SafeAreaView, ScrollView, StatusBar, StyleSheet, TouchableOpacity} from "react-native";
 import PersonOverview from "../components/PersonOverview";
-import {IconButton, TouchableRipple} from "react-native-paper";
+import {IconButton, Portal, TouchableRipple} from "react-native-paper";
 import ReceiptItem from "../components/ReceiptItem";
-import {useMemo, useState} from "react";
+import {useMemo, useRef, useState} from "react";
 import 'react-native-get-random-values';
 import {nanoid} from "nanoid";
 import {calculateItemSplit, getRandomItemName} from "../utils/ReceiptItemUtils";
@@ -10,7 +10,14 @@ import {getRandomName} from "../utils/AvatarUtils";
 import EditListDialog from "../components/EditListDialog";
 import ReceiptOverviewFooter from "../components/ReceiptOverviewFooter";
 import useThemeColor from "../hooks/useThemeColor";
-import {Text, Banner} from "../components/theming";
+import {Banner, Text} from "../components/theming";
+import {
+    getPendingResultAsync,
+    ImagePickerOptions,
+    launchCameraAsync, launchImageLibraryAsync,
+    MediaTypeOptions
+} from "expo-image-picker";
+import MLKit, {MLKTextLine} from "react-native-mlkit-ocr/src";
 
 export type PersonType = {
     id: string,
@@ -169,6 +176,93 @@ export default function ReceiptSplitScreen() {
         }
     }
 
+    const pictureOptions: ImagePickerOptions = {
+        allowsMultipleSelection: false,
+        allowsEditing: true,
+        mediaTypes: MediaTypeOptions.Images,
+        quality: 0.1
+    };
+
+    const [imgUri, setImgUri] = useState("https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png");
+
+    const recognizeFromCamera = async () => {
+        // Get image from camera
+        const image = await launchCameraAsync(pictureOptions);
+        console.log(image);
+        if(image.cancelled) return;
+
+        await parseImage(image.uri);
+    };
+
+    const recognizeFromGallery = async () => {
+        // Get image from gallery
+        const image = await launchImageLibraryAsync(pictureOptions);
+        console.log(image);
+        if(image.cancelled) return;
+
+        setImgUri(image.uri);
+
+        await parseImage(image.uri);
+    }
+
+    const [debugLines, setDebugLines] = useState("");
+    const parseImage = async (imageUri: string) => {
+        setImgUri("HI");
+
+        // Read text from image and split into lines
+        const recognizedText = await MLKit.detectFromUri(imageUri);
+        const recognizedLines = recognizedText.flatMap(block => block.lines);
+
+        setImgUri("SEFSEF");
+
+        // Categorize lines depending on if they seem to have text or numbers
+        let textBlocks: MLKTextLine[] = [];
+        let numBlocks: MLKTextLine[] = [];
+        recognizedLines.forEach((line) => {
+            if(/^[\d$ \n.]+$/.test(line.text)) numBlocks.push(line);
+            else textBlocks.push(line);
+            // console.log("--------");
+            // console.log(line);
+            // console.log("--------");
+        });
+        // console.log(textBlocks);
+        // console.log(numBlocks);
+
+        // Sort so we loop through from top -> bottom
+        textBlocks.sort((a, b) => a.bounding.top - b.bounding.top);
+        numBlocks.sort((a, b) => a.bounding.top - b.bounding.top);
+
+        // For each text line, find all the num lines that have the majority of their bounding box on the same level
+        // Attempts to correctly pair together item names + prices
+        type Line = {
+            text: string, nums: string[]
+        }
+        let lines: Line[] = textBlocks.map((block) => ({text: block.text, nums:[]}));
+        numBlocks.forEach((block) => {
+            let maxOverlap = 0;
+            let maxOverlapI = -1;
+
+            // Go through each text block and find the one with the largest overlap
+            const blockTop = block.bounding.top;
+            const blockBottom = block.bounding.top + block.bounding.height;
+            textBlocks.forEach((textBlock, i) => {
+                const textBlockTop = textBlock.bounding.top;
+                const textBlockBottom = textBlock.bounding.top + textBlock.bounding.height;
+
+                const overlap = Math.max(0, Math.min(blockBottom, textBlockBottom) - Math.max(blockTop, textBlockTop));
+                if(overlap > maxOverlap){
+                    maxOverlap = overlap;
+                    maxOverlapI = i;
+                }
+            });
+
+            if(maxOverlapI != -1) lines[maxOverlapI].nums.push(block.text);
+        });
+
+        console.log(lines);
+        setDebugLines(lines.map(line => `${line.text}: ${line.nums.join(", ")}`).join("\n"));
+    }
+
     const backgroundColor = useThemeColor("background");
     const highlightColor = useThemeColor("highlight");
 
@@ -194,9 +288,16 @@ export default function ReceiptSplitScreen() {
                 ))}
             </ScrollView>
 
+            {(imgUri !== "") && <>
+                <Text>{imgUri}</Text>
+                <Image style={{width: "100%", height:300, resizeMode:'contain'}} source={{uri: imgUri}}/>
+                <Text>{debugLines}</Text>
+            </>}
+
             <Banner>
                 <Text style={styles.bannerText}>Edit Receipt</Text>
-                <IconButton icon={"camera"} onPress={() => console.log("camera")}/>
+                <IconButton icon={"image"} onPress={recognizeFromGallery}/>
+                <IconButton icon={"camera"} onPress={recognizeFromCamera}/>
                 <IconButton icon={"plus"} onPress={addReceiptItem}/>
                 <IconButton icon={"minus"} onPress={openEditReceiptModal}/>
             </Banner>
