@@ -5,7 +5,7 @@ import {Fonts} from "../styling/StyleConstants";
 
 type EditListDialogProps = {
     title: string,
-    items: string[],
+    items: {id: string, name: string}[],
     visible: boolean,
     onClose: () => void,
     onSubmit: (removeItem: boolean[]) => void
@@ -36,12 +36,12 @@ export default function EditListDialog({title, items, visible, onClose, onSubmit
             <Dialog.Content>
                 {items.map((item, i) => (
                     <Checkbox.Item
-                        label={item}
+                        label={item.name}
                         status={isChecked[i]? "indeterminate" : "unchecked"}
                         onPress={() => setChecked(i, !isChecked[i])}
                         position={"leading"}
                         labelStyle={{textAlign: "left", fontFamily: Fonts.normalFont}}
-                        key={item}
+                        key={item.id}
                     />
                 ))}
             </Dialog.Content>

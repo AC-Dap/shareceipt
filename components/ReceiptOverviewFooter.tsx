@@ -1,7 +1,6 @@
 import {StyleSheet, TouchableOpacity} from "react-native";
 import {ReceiptItemType} from "../screens/ReceiptSplitScreen";
 import {useMemo, useState} from "react";
-import TextInputDialog from "./TextInputDialog";
 import {Text, Banner} from "./theming";
 import {Button, Dialog, Portal, TextInput} from "react-native-paper";
 
@@ -83,11 +82,11 @@ export default function ReceiptOverviewFooter({ items, taxPercent, tipPercent, s
     return (
         <Banner style={styles.footer}>
             <TouchableOpacity style={styles.textContainer} onPress={() => setShowTaxDialog(true)}>
-                <Text>{`Tax: ${taxPercent}%`}</Text>
+                <Text>{`Tax: ${taxPercent.toFixed(2)}%`}</Text>
                 <Text>{`($${(itemTotal * taxPercent / 100).toFixed(2)})`}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.textContainer} onPress={() => setShowTipDialog(true)}>
-                <Text>{`Tax: ${tipPercent}%`}</Text>
+                <Text>{`Tax: ${tipPercent.toFixed(2)}%`}</Text>
                 <Text>{`($${(itemTotal * tipPercent / 100).toFixed(2)})`}</Text>
             </TouchableOpacity>
             <Text>{`Total: $${(itemTotal * (1 + (taxPercent + tipPercent)/ 100)).toFixed(2)}`}</Text>

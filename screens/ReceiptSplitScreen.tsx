@@ -43,10 +43,7 @@ export default function ReceiptSplitScreen() {
         setShowEditPartyModal(false);
     }
     const submitEditPartyModal = (toRemove: boolean[]) => {
-        let people: PersonType[] = []
-        toRemove.forEach((remove, i) => {
-            if (remove) people.push(party[i]);
-        });
+        const people: PersonType[] = party.filter((_, i) => toRemove[i]);
         removePeople(people);
     }
 
@@ -58,10 +55,7 @@ export default function ReceiptSplitScreen() {
         setShowEditReceiptModal(false);
     }
     const submitEditReceiptModal = (toRemove: boolean[]) => {
-        let items: ReceiptItemType[] = []
-        toRemove.forEach((remove, i) => {
-            if (remove) items.push(receiptItems[i]);
-        });
+        const items: ReceiptItemType[] = receiptItems.filter((_, i) => toRemove[i]);
         removeReceiptItems(items);
     }
 
@@ -82,13 +76,13 @@ export default function ReceiptSplitScreen() {
         }));
     }
     const removePeople = (people: PersonType[]) => {
-        let newParty = party;
-        let newItems = receiptItems;
+        let newParty = [...party];
+        let newItems = [...receiptItems];
 
         people.forEach((person) => {
             const index = newParty.indexOf(person);
             newParty.splice(index, 1);
-            receiptItems.forEach((item) => item.peoplePaying.splice(index, 1));
+            newItems.forEach((item) => item.peoplePaying.splice(index, 1));
         })
 
         setParty(newParty);
@@ -114,7 +108,7 @@ export default function ReceiptSplitScreen() {
         }));
     }
     const removeReceiptItems = (items: ReceiptItemType[]) => {
-        let newItems = receiptItems;
+        let newItems = [...receiptItems];
 
         items.forEach((item) => {
             const index = newItems.indexOf(item);
@@ -163,6 +157,7 @@ export default function ReceiptSplitScreen() {
                 if (isPaying) receiptSplit[i] += split;
             })
         }));
+        // Scale everything by the tip and tax
         for(let i = 0; i < receiptSplit.length; i++) receiptSplit[i] *= (1 + (taxPercent + tipPercent)/100);
         return receiptSplit;
     }, [party, receiptItems, taxPercent, tipPercent]);
@@ -327,7 +322,10 @@ export default function ReceiptSplitScreen() {
 
             <EditListDialog
                 title={"Remove party members"}
-                items={party.map((person) => person.name)}
+                items={party.map((person) => ({
+                    name: person.name,
+                    id: person.id
+                }))}
                 visible={showEditPartyModal}
                 onClose={closeEditPartyModal}
                 onSubmit={submitEditPartyModal}
@@ -335,7 +333,10 @@ export default function ReceiptSplitScreen() {
 
             <EditListDialog
                 title={"Remove receipt items"}
-                items={receiptItems.map((item) => item.name)}
+                items={receiptItems.map((item) => ({
+                    name: item.name,
+                    id: item.id
+                }))}
                 visible={showEditReceiptModal}
                 onClose={closeEditReceiptModal}
                 onSubmit={submitEditReceiptModal}
