@@ -1,5 +1,5 @@
 import {StyleSheet, TouchableOpacity} from "react-native";
-import {ReceiptItemType} from "../screens/ReceiptSplitScreen";
+import {ReceiptItemType} from "../screens/ShareceiptScreen";
 import {useMemo, useState} from "react";
 import {Text, Banner} from "./theming";
 import {Button, Dialog, Portal, TextInput} from "react-native-paper";

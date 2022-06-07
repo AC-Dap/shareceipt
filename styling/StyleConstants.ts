@@ -5,7 +5,8 @@ export const ColorsLight = {
     background: "#fff",
     highlight: Colors.grey300,
     accent: Colors.blueGrey700,
-    text: "#000"
+    text: "#000",
+    errorText: '#dd0000'
 }
 
 export const ColorsDark = {
@@ -13,7 +14,8 @@ export const ColorsDark = {
     background: Colors.grey900,
     highlight: Colors.grey800,
     accent: Colors.blue300,
-    text: "#fff"
+    text: "#fff",
+    errorText: '#ff0033'
 }
 
 export const Fonts = {

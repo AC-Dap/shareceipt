@@ -3,7 +3,7 @@ import {Chip, Colors, IconButton} from "react-native-paper";
 import {StyleSheet, TouchableOpacity} from "react-native";
 import CircleAvatar from "./CircleAvatar";
 import PersonOverview from "./PersonOverview";
-import {PersonType} from "../screens/ReceiptSplitScreen";
+import {PersonType} from "../screens/ShareceiptScreen";
 import {calculateItemSplit} from "../utils/ReceiptItemUtils";
 import TextInputDialog from "./TextInputDialog";
 import {View, Text, ReceiptText} from "./theming";
