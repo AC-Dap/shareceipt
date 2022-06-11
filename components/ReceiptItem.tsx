@@ -1,6 +1,6 @@
-import {useState} from "react";
-import {Chip, Colors, IconButton} from "react-native-paper";
-import {StyleSheet, TouchableOpacity} from "react-native";
+import {useRef, useState} from "react";
+import {Chip, IconButton} from "react-native-paper";
+import {Animated, StyleSheet, TouchableOpacity} from "react-native";
 import CircleAvatar from "./CircleAvatar";
 import PersonOverview from "./PersonOverview";
 import {PersonType} from "../screens/ShareceiptScreen";
@@ -8,6 +8,7 @@ import {calculateItemSplit} from "../utils/ReceiptItemUtils";
 import TextInputDialog from "./TextInputDialog";
 import {View, Text, ReceiptText} from "./theming";
 import useThemeColor from "../hooks/useThemeColor";
+import {Animations} from "../styling/StyleConstants";
 
 type ReceiptItemProps = {
     name: string,
@@ -22,6 +23,29 @@ type ReceiptItemProps = {
 
 export default function ReceiptItem({ party, name, price, peoplePaying, removePerson, addAll, editable, onItemChange} : ReceiptItemProps) {
     const [isOpen, setIsOpen] = useState(false);
+    const btnRotationValue = useRef(new Animated.Value(0)).current;
+    const btnRotation = btnRotationValue.interpolate({
+        inputRange: [0, 1],
+        outputRange: ['0deg', '90deg']
+    })
+    const toggleOpen = () => {
+        if(isOpen){
+            Animated.timing(btnRotationValue, {
+                toValue: 0,
+                duration: Animations.timingDuration,
+                useNativeDriver: true
+            }).start();
+        }else{
+            Animated.timing(btnRotationValue, {
+                toValue: 1,
+                duration: Animations.timingDuration,
+                useNativeDriver: true
+            }).start();
+        }
+
+        Animations.layoutAnimation();
+        setIsOpen(!isOpen);
+    }
 
     const [editingName, setEditingName] = useState(false);
     const openNameDialog = () => {
@@ -87,8 +111,9 @@ export default function ReceiptItem({ party, name, price, peoplePaying, removePe
 
     return (
         <View style={styles.container}>
-            <IconButton color={smallBtnColors} icon={"chevron-right"} onPress={() => setIsOpen(!isOpen)}
-                        style={(isOpen) ? { transform: [{rotateZ: "90deg"}]} : {}}/>
+            <Animated.View style={{transform: [{rotate: btnRotation}]}}>
+                <IconButton color={smallBtnColors} icon={"chevron-right"} onPress={toggleOpen}/>
+            </Animated.View>
             <View style={styles.infoContainer}>
                 <View style={styles.itemDescription}>
                     <TouchableOpacity onPress={openNameDialog} style={styles.itemName}>
@@ -131,7 +156,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: "row",
-        paddingVertical: 10
+        paddingVertical: 10,
+        alignItems: "flex-start"
     },
     infoContainer: {
         flex: 1,

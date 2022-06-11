@@ -1,6 +1,14 @@
-import {SafeAreaView, ScrollView, StatusBar, StyleSheet, TouchableOpacity} from "react-native";
+import {
+    LayoutAnimation,
+    SafeAreaView,
+    ScrollView,
+    StatusBar,
+    StyleSheet,
+    TouchableOpacity,
+    useWindowDimensions
+} from "react-native";
 import PersonOverview from "../components/PersonOverview";
-import {Colors, IconButton, Snackbar, TouchableRipple} from "react-native-paper";
+import {IconButton, Snackbar, TouchableRipple} from "react-native-paper";
 import ReceiptItem from "../components/ReceiptItem";
 import {useMemo, useState} from "react";
 import 'react-native-get-random-values';
@@ -11,13 +19,8 @@ import EditListDialog from "../components/EditListDialog";
 import ReceiptOverviewFooter from "../components/ReceiptOverviewFooter";
 import useThemeColor from "../hooks/useThemeColor";
 import {Banner, Text} from "../components/theming";
-import {
-    ImagePickerOptions,
-    launchCameraAsync, launchImageLibraryAsync,
-    MediaTypeOptions
-} from "expo-image-picker";
-import OCRLibrary from "../modules/OCRLibrary";
 import ReceiptOCRButtons from "../components/ReceiptOCRButtons";
+import {Animations} from "../styling/StyleConstants";
 
 export type PersonType = {
     id: string,
@@ -60,6 +63,7 @@ export default function ShareceiptScreen() {
     }
 
     const addPerson = () => {
+        Animations.layoutAnimation();
         setParty([...party, {id: nanoid(), name: getRandomName()}]);
         setReceiptItems(receiptItems.map((item) => {
             item.peoplePaying.push(false);
@@ -85,11 +89,13 @@ export default function ShareceiptScreen() {
             newItems.forEach((item) => item.peoplePaying.splice(index, 1));
         })
 
+        Animations.layoutAnimation();
         setParty(newParty);
         setReceiptItems(newItems);
     }
 
     const addReceiptItem = () => {
+        Animations.layoutAnimation();
         setReceiptItems([...receiptItems, {
             id: nanoid(),
             name: getRandomItemName(),
@@ -115,9 +121,11 @@ export default function ShareceiptScreen() {
             newItems.splice(index, 1);
         })
 
+        Animations.layoutAnimation();
         setReceiptItems(newItems);
     }
     const addPersonToItem = (item: ReceiptItemType, person: PersonType) => {
+        Animations.layoutAnimation();
         setReceiptItems(receiptItems.map((el) => {
             if (el === item) {
                 el.peoplePaying[party.indexOf(person)] = true;
@@ -127,6 +135,7 @@ export default function ShareceiptScreen() {
         }));
     }
     const removePersonFromItem = (item: ReceiptItemType, person: PersonType) => {
+        Animations.layoutAnimation();
         setReceiptItems(receiptItems.map((el) => {
             if (el === item) {
                 el.peoplePaying[party.indexOf(person)] = false;
@@ -136,6 +145,7 @@ export default function ShareceiptScreen() {
         }));
     }
     const addAllToItem = (item: ReceiptItemType) => {
+        Animations.layoutAnimation();
         setReceiptItems(receiptItems.map((el) => {
             if (el === item) {
                 el.peoplePaying.fill(true);
@@ -183,6 +193,8 @@ export default function ShareceiptScreen() {
     const errorPopupColor = useThemeColor("banner");
     const errorTextColor = useThemeColor("errorText");
 
+    const windowHeight = useWindowDimensions().height;
+
     return (
         <SafeAreaView style={[{backgroundColor: backgroundColor}, styles.container]}>
             <Banner>
@@ -190,7 +202,7 @@ export default function ShareceiptScreen() {
                 <IconButton icon={"plus"} onPress={addPerson}/>
                 <IconButton icon={"minus"} onPress={openEditPartyModal}/>
             </Banner>
-            <ScrollView style={styles.peopleScrollArea}>
+            <ScrollView style={{ minHeight: windowHeight / 3, maxHeight: windowHeight / 3}}>
                 {party.map((person, i) => (
                     <TouchableOpacity
                         onPress={() => onSelectPerson(person)} key={person.id}
@@ -217,7 +229,7 @@ export default function ShareceiptScreen() {
                 <IconButton icon={"plus"} onPress={addReceiptItem}/>
                 <IconButton icon={"minus"} onPress={openEditReceiptModal}/>
             </Banner>
-            <ScrollView style={styles.receiptScrollArea}>
+            <ScrollView>
                 {receiptItems.map((item) => (
                     <TouchableRipple
                         disabled={selectedPerson === null}
@@ -288,11 +300,5 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginRight: "auto",
         fontSize: 18
-    },
-    peopleScrollArea: {
-        flex: 2
-    },
-    receiptScrollArea: {
-        flex: 3
     }
 });

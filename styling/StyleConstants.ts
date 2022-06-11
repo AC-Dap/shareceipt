@@ -1,9 +1,10 @@
 import {Colors} from "react-native-paper";
+import {LayoutAnimation} from "react-native";
 
 export const ColorsLight = {
-    banner: Colors.blue300, // lightBlue800
+    banner: '#19AFDE',
     background: "#fff",
-    highlight: Colors.grey300,
+    highlight: Colors.grey400,
     accent: Colors.blueGrey700,
     text: "#000",
     errorText: '#dd0000'
@@ -21,4 +22,20 @@ export const ColorsDark = {
 export const Fonts = {
     receiptFont: 'receipt',
     normalFont: 'sans-serif'
+}
+
+export const Animations = {
+    timingDuration: 350,
+    layoutAnimation: () => {
+        LayoutAnimation.configureNext({
+            duration: Animations.timingDuration,
+            create: {
+                type: LayoutAnimation.Types.easeOut,
+                property: "opacity"
+            },
+            update: {
+                type: LayoutAnimation.Types.easeOut
+            }
+        });
+    }
 }
