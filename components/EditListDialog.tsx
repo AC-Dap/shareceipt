@@ -2,6 +2,7 @@ import {Button, Checkbox, Dialog, Portal} from "react-native-paper";
 import {useEffect, useState} from "react";
 import {Text} from "./theming";
 import {Fonts} from "../styling/StyleConstants";
+import {ScrollView} from "react-native";
 
 type EditListDialogProps = {
     title: string,
@@ -33,18 +34,20 @@ export default function EditListDialog({title, items, visible, onClose, onSubmit
             <Dialog.Title>
                 <Text>{title}</Text>
             </Dialog.Title>
-            <Dialog.Content>
-                {items.map((item, i) => (
-                    <Checkbox.Item
-                        label={item.name}
-                        status={isChecked[i]? "indeterminate" : "unchecked"}
-                        onPress={() => setChecked(i, !isChecked[i])}
-                        position={"leading"}
-                        labelStyle={{textAlign: "left", fontFamily: Fonts.normalFont}}
-                        key={item.id}
-                    />
-                ))}
-            </Dialog.Content>
+            <Dialog.ScrollArea>
+                <ScrollView>
+                    {items.map((item, i) => (
+                        <Checkbox.Item
+                            label={item.name}
+                            status={isChecked[i]? "indeterminate" : "unchecked"}
+                            onPress={() => setChecked(i, !isChecked[i])}
+                            position={"leading"}
+                            labelStyle={{textAlign: "left", fontFamily: Fonts.normalFont}}
+                            key={item.id}
+                        />
+                    ))}
+                </ScrollView>
+            </Dialog.ScrollArea>
             <Dialog.Actions>
                 <Button onPress={close}><Text>Cancel</Text></Button>
                 <Button onPress={submit}><Text>Submit</Text></Button>
