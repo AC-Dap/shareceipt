@@ -1,20 +1,19 @@
 {
   "expo": {
-    "name": "shareceipt",
+    "name": "Shareceipt",
+    "description": "Simple Android app to help scan and fairly split a receipt",
     "slug": "shareceipt",
     "version": "1.0.0",
+    "githubUrl": "https://github.com/AC-Dap/shareceipt",
     "orientation": "portrait",
-    "scheme": "myapp",
+    "scheme": "shareceipt",
     "userInterfaceStyle": "automatic",
-    "platforms": ["android", "web"],
+    "platforms": ["android"],
     "updates": {
       "fallbackToCacheTimeout": 0
     },
     "assetBundlePatterns": [
       "**/*"
-    ],
-    "web": {
-      "favicon": "./assets/images/favicon.png"
-    }
+    ]
   }
 }
