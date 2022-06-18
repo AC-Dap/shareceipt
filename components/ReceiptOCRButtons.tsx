@@ -18,7 +18,7 @@ export default function ReceiptOCRButtons({ partySize, showErrorMessage, setTipP
         allowsMultipleSelection: false,
         allowsEditing: true,
         mediaTypes: MediaTypeOptions.Images,
-        quality: 0.1
+        quality: 1
     };
 
     const [initializedApi, setInitializedApi] = useState(false);
@@ -81,7 +81,7 @@ export default function ReceiptOCRButtons({ partySize, showErrorMessage, setTipP
                 const price = parseFloat(match[3]);
 
                 // Have different actions for special receipt lines
-                const nameFilterRegex = /^(subtotal|total|tax|tip)[:-]*$/
+                const nameFilterRegex = /^(sub total|subtotal|total|tax|tip)[:-]*$/
                 let nameMatch = name.toLowerCase().match(nameFilterRegex);
                 if(nameMatch){
                     if(nameMatch[1] === 'tax') tax = price;
