@@ -43,7 +43,10 @@ export default function ReceiptItem({ party, name, price, peoplePaying, removePe
             }).start();
         }
 
-        Animations.layoutAnimation();
+        // Don't animate if there aren't any children nodes
+        // to avoid janky looking animation
+        const numPeoplePaying = peoplePaying.reduce((cumSum, val) => cumSum + (val? 1 : 0), 0);
+        if(numPeoplePaying > 0) Animations.layoutAnimation();
         setIsOpen(!isOpen);
     }
 
