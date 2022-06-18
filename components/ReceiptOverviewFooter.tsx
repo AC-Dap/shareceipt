@@ -86,7 +86,7 @@ export default function ReceiptOverviewFooter({ items, taxPercent, tipPercent, s
                 <Text>{`($${(itemTotal * taxPercent / 100).toFixed(2)})`}</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.textContainer} onPress={() => setShowTipDialog(true)}>
-                <Text>{`Tax: ${tipPercent.toFixed(2)}%`}</Text>
+                <Text>{`Tip: ${tipPercent.toFixed(2)}%`}</Text>
                 <Text>{`($${(itemTotal * tipPercent / 100).toFixed(2)})`}</Text>
             </TouchableOpacity>
             <Text>{`Total: $${(itemTotal * (1 + (taxPercent + tipPercent)/ 100)).toFixed(2)}`}</Text>
