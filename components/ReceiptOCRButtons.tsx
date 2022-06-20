@@ -8,12 +8,13 @@ import {useState} from "react";
 type ReceiptOCRButtonsType = {
     partySize: number,
     showErrorMessage: (msg: string) => void,
+    setShowLoadingText: (show: boolean) => void,
     setTipPercent: (percent: number) => void,
     setTaxPercent: (percent: number) => void,
     setReceiptItems: (items: ReceiptItemType[]) => void
 }
 
-export default function ReceiptOCRButtons({ partySize, showErrorMessage, setTipPercent, setTaxPercent, setReceiptItems }: ReceiptOCRButtonsType) {
+export default function ReceiptOCRButtons({ partySize, setShowLoadingText, showErrorMessage, setTipPercent, setTaxPercent, setReceiptItems }: ReceiptOCRButtonsType) {
     const pictureOptions: ImagePickerOptions = {
         allowsMultipleSelection: false,
         allowsEditing: true,
@@ -60,7 +61,14 @@ export default function ReceiptOCRButtons({ partySize, showErrorMessage, setTipP
 
     // Parse a given image of a receipt and attempt to read the list of items from it
     const parseImage = async (imageUri: string) => {
-        if(!(await tryInitApi())) throw new Error("OCR Library failed to initialize");
+        setShowLoadingText(true);
+
+        if(!(await tryInitApi())){
+            setShowLoadingText(false);
+            throw new Error("OCR Library failed to initialize");
+        }
+
+        setReceiptItems([]);
 
         const text = await OCRLibrary.recognizeTextFromURI(imageUri);
 
@@ -102,6 +110,7 @@ export default function ReceiptOCRButtons({ partySize, showErrorMessage, setTipP
         });
         if(tip != -1) setTipPercent(tip / total * 100);
         if(tax != -1) setTaxPercent(tax / total * 100);
+        setShowLoadingText(false);
         setReceiptItems(newReceipt);
     }
 

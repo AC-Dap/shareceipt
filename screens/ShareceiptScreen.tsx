@@ -181,6 +181,8 @@ export default function ShareceiptScreen() {
         }
     }
 
+    const [showLoadingText, setShowLoadingText] = useState(false);
+
     const [errorPopupMsg, setErrorPopupMsg] = useState("");
     const [showErrorPopup, setShowErrorPopup] = useState(false);
     const showErrorMessage = (msg: string) => {
@@ -221,6 +223,7 @@ export default function ShareceiptScreen() {
                 <Text style={styles.bannerText}>Edit Receipt</Text>
                 <ReceiptOCRButtons
                     partySize={party.length}
+                    setShowLoadingText={setShowLoadingText}
                     showErrorMessage={showErrorMessage}
                     setTipPercent={setTipPercent}
                     setTaxPercent={setTaxPercent}
@@ -230,6 +233,7 @@ export default function ShareceiptScreen() {
                 <IconButton icon={"minus"} onPress={openEditReceiptModal}/>
             </Banner>
             <ScrollView>
+                {showLoadingText && <Text style={styles.loadingText}>Scanning image...</Text>}
                 {receiptItems.map((item) => (
                     <TouchableRipple
                         disabled={selectedPerson === null}
@@ -300,5 +304,10 @@ const styles = StyleSheet.create({
         marginLeft: 10,
         marginRight: "auto",
         fontSize: 18
+    },
+    loadingText: {
+        marginLeft: "auto",
+        marginRight: "auto",
+        marginTop: 15
     }
 });
