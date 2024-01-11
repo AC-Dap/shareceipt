@@ -6,47 +6,53 @@ Just assign each person to the items they had, and the app does the rest!
 ## How to use
 
 #### Step 1: Add party members
-You'll first want to add all the people in your group. 
-To do so, just press the + button to add a person, then click on their name to edit it.
 
-In case you've somehow added too many people, just press the - button to remove people from the list.
+You'll first want to add all the people in your group via the "Add Member" button at the top.
+Each person can be further renamed or removed by pressing on the three dots to the right.
+
+If this is a party that you are frequently with, you can easily save the list of people at the top left!
+Saved parties can then be loaded by pressing the people icon.
 
 <img src="demo/step1.gif" width="208" height="396" alt="Demo - Adding party members gif"/>
 
 #### Step 2: Scan and edit your receipt
-Now you want to actually scan the receipt that you'll be splitting up, either by selecting an image that you've already taken or taking an image straight from the app.
+
+Now you want to actually scan the receipt that you'll be splitting up, either by selecting an image or manually adding
+each item.
 
 Once the app has scanned your image, there may be some mistakes that you'll have to fix, either an incorrect price or a missing item.
-Both can be easily fixed by tapping on an item's price or pressing the + button to add another item.
-Once again, if you need to remove an item from the list, just press the - button to do so.
+Once again, you can easily edit or remove an item by pressing the three dots to the right.
 
 <img src="demo/step2.gif" width="208" height="396" alt="Demo - Scanning and editing receipt gif"/>
 
 #### Step 3: Edit the tip and tax
 Now that you have your receipt scanned, you can edit the tip and tax. 
 You can give either the percentage or the exact amount, depending on what you're given.
+At this point, you can double check that the total amount is correct, and make any further edits if needed.
 
 <img src="demo/step3.gif" width="208" height="396" alt="Demo - Editing tip and tax gif"/>
 
 #### Step 4: Assign people to their items 
 Finally, you just need to assign each person to the items that they'll be paying for.
 For items that everyone shared, just press the "Add all" button to split it amongst everyone.
-For other items, first press on the person to select them, and they press on an item to assign them to it. 
+For other items, simply select the names of the people who had it!
 Repeat this for every item on the receipt. 
 
 <img src="demo/step4.gif" width="208" height="396" alt="Demo - Assigning receipt items to party members gif"/>
 
 #### Step 5: You're done!
 Now, just read the amount each person needs to pay from beside their name, split fairly for everyone!
+If you want a breakdown of what exactly someone is paying for, just press their name to see the details.
 
 ## Building
 As this project does have native Android code, you do need Android Studio installed to build and run the app.
-Luckily, Expo makes it a lot less painful to do so; once you have the dependencies installed with `npm install`, just run `npm run android` (or `expo run:android`) to build and start up the app in your connected Android device/emulator.
+Luckily, Expo makes it a lot less painful to do so; once you have the dependencies installed with `npm install`, just
+run `npx expo run:android` to build and start up the app in your connected Android device/emulator.
 
 ## Technologies Used
 - [React Native](https://reactnative.dev/)
 - [Expo](https://expo.dev/)
-- [React Native Paper](https://reactnativepaper.com/)
+- [RNUI](https://wix.github.io/react-native-ui-lib/)
 - [Tesseract4Android](https://github.com/adaptech-cz/Tesseract4Android)
 
 ## License
