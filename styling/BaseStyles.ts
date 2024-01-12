@@ -6,7 +6,6 @@ export const StylingConstants = {
     colors: {
         primary: "#2979ff",
         secondary: "#716BEC",
-        accent: "#925ED7",
         error: "#b00020",
         success: "#00c853",
         warning: "#ffab00",
