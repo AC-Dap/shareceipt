@@ -5,7 +5,9 @@
     "description": "Simple Android app to help scan and fairly split a receipt",
     "githubUrl": "https://github.com/AC-Dap/shareceipt",
     "version": "2.0.0",
-    "platforms": ["android"],
+    "platforms": [
+      "android"
+    ],
     "orientation": "portrait",
     "splash": {
       "image": "./assets/splash.png",
@@ -20,8 +22,12 @@
         "foregroundImage": "./assets/icon-foreground.png",
         "monochromeImage": "./assets/icon-monochrome.png",
         "backgroundImage": "./assets/icon-background.png"
-      },
-      "package": "com.acdap.shareceipt"
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f77a24c5-194f-4894-9cb3-8e97e3dba70d"
+      }
     }
   }
 }
