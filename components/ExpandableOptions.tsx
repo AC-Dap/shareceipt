@@ -1,7 +1,7 @@
 import {IconButton} from "./base/IconButton";
 import {StylingConstants} from "../styling/BaseStyles";
 import View from "react-native-ui-lib/view";
-import {ReactNode, useState} from "react";
+import {forwardRef, ReactNode, useImperativeHandle, useState} from "react";
 import {StyleSheet} from "react-native";
 
 type ExpandableOptionsProps = {
@@ -15,8 +15,22 @@ const styles = StyleSheet.create({
     }
 });
 
-export const ExpandableOptions = ({children}: ExpandableOptionsProps) => {
+export type ExpandableOptionsRef = {
+    showActions: () => void,
+    hideActions: () => void
+}
+
+export const ExpandableOptions = forwardRef(({
+    children
+}: ExpandableOptionsProps, ref) => {
     const [showActions, setShowActions] = useState(false);
+
+    useImperativeHandle(ref, (): ExpandableOptionsRef => {
+        return {
+            showActions: () => setShowActions(true),
+            hideActions: () => setShowActions(false)
+        }
+    }, []);
 
     return (
         <View style={styles.hintButtonContainer}>
@@ -28,4 +42,4 @@ export const ExpandableOptions = ({children}: ExpandableOptionsProps) => {
             />
         </View>
     );
-}
+});

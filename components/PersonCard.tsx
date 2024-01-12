@@ -1,5 +1,5 @@
 import {StyleSheet} from "react-native";
-import {useContext, useState} from "react";
+import {useContext, useRef, useState} from "react";
 import {ReceiptContext} from "../context/ReceiptContext";
 import Text from "react-native-ui-lib/text";
 import TouchableOpacity from "react-native-ui-lib/touchableOpacity";
@@ -7,7 +7,7 @@ import {PersonDialog} from "./dialogs/PersonDialog";
 import {ConfirmDialog} from "./dialogs/ConfirmDialog";
 import {StylingConstants} from "../styling/BaseStyles";
 import {IconButton} from "./base/IconButton";
-import {ExpandableOptions} from "./ExpandableOptions";
+import {ExpandableOptions, ExpandableOptionsRef} from "./ExpandableOptions";
 
 type PersonCardProps = {
     personIdx: number
@@ -40,19 +40,27 @@ export const PersonCard = ({personIdx}: PersonCardProps) => {
         setShowConfirmDialog(false);
     }
 
+    const optionsRef = useRef<ExpandableOptionsRef | null>(null);
+
     return <>
         <TouchableOpacity style={styles.container} onPress={() => setShowDialog(true)}>
             <Text style={styles.name}>{receipt.party[personIdx]}</Text>
-            <ExpandableOptions>
+            <ExpandableOptions ref={optionsRef}>
                 <IconButton
                     icon={"pencil"}
                     iconColor={StylingConstants.colors.secondary}
-                    onPress={() => setShowDialog(true)}
+                    onPress={() => {
+                        setShowDialog(true);
+                        optionsRef.current?.hideActions();
+                    }}
                 />
                 <IconButton
                     icon={"trash-o"}
                     iconColor={StylingConstants.colors.secondary}
-                    onPress={() => setShowConfirmDialog(true)}
+                    onPress={() => {
+                        setShowConfirmDialog(true);
+                        optionsRef.current?.hideActions();
+                    }}
                 />
             </ExpandableOptions>
         </TouchableOpacity>

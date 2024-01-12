@@ -1,5 +1,5 @@
 import {StyleSheet} from "react-native";
-import {useContext, useState} from "react";
+import {useContext, useRef, useState} from "react";
 import {ReceiptContext} from "../context/ReceiptContext";
 import Text from "react-native-ui-lib/text";
 import TouchableOpacity from "react-native-ui-lib/touchableOpacity";
@@ -8,7 +8,7 @@ import {formatPrice} from "../utils/priceUtils";
 import {ConfirmDialog} from "./dialogs/ConfirmDialog";
 import {StylingConstants} from "../styling/BaseStyles";
 import {IconButton} from "./base/IconButton";
-import {ExpandableOptions} from "./ExpandableOptions";
+import {ExpandableOptions, ExpandableOptionsRef} from "./ExpandableOptions";
 
 type ReceiptItemCardProps = {
     itemIdx: number
@@ -46,21 +46,28 @@ export const ReceiptItemCard = ({itemIdx}: ReceiptItemCardProps) => {
         setShowConfirmDialog(false);
     }
 
+    const optionsRef = useRef<ExpandableOptionsRef | null>(null);
 
     return <>
         <TouchableOpacity style={styles.container} onPress={() => setShowDialog(true)}>
             <Text style={styles.name}>{receipt.receipt[itemIdx].name}</Text>
             <Text style={styles.price}>${formatPrice(receipt.receipt[itemIdx].priceCents)}</Text>
-            <ExpandableOptions>
+            <ExpandableOptions ref={optionsRef}>
                 <IconButton
                     icon={"pencil"}
                     iconColor={StylingConstants.colors.secondary}
-                    onPress={() => setShowDialog(true)}
+                    onPress={() => {
+                        setShowDialog(true);
+                        optionsRef.current?.hideActions();
+                    }}
                 />
                 <IconButton
                     icon={"trash-o"}
                     iconColor={StylingConstants.colors.secondary}
-                    onPress={() => setShowConfirmDialog(true)}
+                    onPress={() => {
+                        setShowConfirmDialog(true);
+                        optionsRef.current?.hideActions();
+                    }}
                 />
             </ExpandableOptions>
         </TouchableOpacity>
