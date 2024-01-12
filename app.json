@@ -9,6 +9,7 @@
       "android"
     ],
     "orientation": "portrait",
+    "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -22,7 +23,8 @@
         "foregroundImage": "./assets/icon-foreground.png",
         "monochromeImage": "./assets/icon-monochrome.png",
         "backgroundImage": "./assets/icon-background.png"
-      }
+      },
+      "package": "com.acdap.shareceipt"
     },
     "extra": {
       "eas": {
