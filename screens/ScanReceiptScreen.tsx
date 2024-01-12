@@ -13,12 +13,17 @@ import {BaseStyles, StylingConstants} from "../styling/BaseStyles";
 import {IconTextButton} from "../components/base/IconTextButton";
 import TouchableOpacity from "react-native-ui-lib/touchableOpacity";
 import {IconButton} from "../components/base/IconButton";
+import {scanReceiptFromCamera, scanReceiptFromGallery, ScanResult, ScanResultStatus} from "../utils/scanReceiptUtils";
 
 const styles = StyleSheet.create({
     actionContainer: {
         flexDirection: "row",
-        justifyContent: "space-between",
+        justifyContent: "flex-start",
+        alignItems: "center",
         marginHorizontal: StylingConstants.spacing.large,
+    },
+    addItemButton: {
+        marginLeft: "auto"
     },
     footerContainer: {
         margin: StylingConstants.spacing.large,
@@ -55,11 +60,35 @@ export const ScanReceiptScreen = () => {
     const [showTipDialog, setShowTipDialog] = useState(false);
     const [showTaxDialog, setShowTaxDialog] = useState(false);
 
+    const scanFromCamera = async () => {handleScanResults(await scanReceiptFromCamera())};
+    const scanFromGallery = async () => {handleScanResults(await scanReceiptFromGallery())};
+    const handleScanResults = (results: ScanResult) => {
+        if(results.status !== ScanResultStatus.Success) return;
+
+        updateReceipt({
+            type: "SET_RECEIPT",
+            payload: results.receipt.receipt
+        });
+        updateReceipt({
+            type: "UPDATE_TAX",
+            payload: results.receipt.taxCents
+        });
+        updateReceipt({
+            type: "UPDATE_TIP",
+            payload: results.receipt.tipCents
+        });
+    }
+
     return <View style={BaseStyles.screenContainer}>
         <View style={styles.actionContainer}>
-            <IconTextButton icon={"camera"} text={"Scan Receipt"} onPress={() => {
-            }}/>
-            <IconTextButton icon={"plus"} text={"Add Item"} onPress={() => setShowAddDialog(true)}/>
+            <IconButton icon={"camera"} onPress={scanFromCamera}/>
+            <IconButton icon={"picture-o"} onPress={scanFromGallery}/>
+            <IconTextButton
+                icon={"plus"}
+                text={"Add Item"}
+                onPress={() => setShowAddDialog(true)}
+                style={styles.addItemButton}
+            />
         </View>
 
         <FlatList
