@@ -21,13 +21,13 @@ const styles = StyleSheet.create({
 });
 
 export const IconTextButton = ({
-                                   icon,
-                                   text,
-                                   onPress,
-                                   iconColor = "white",
-                                   buttonColor = StylingConstants.colors.primary,
-                                   style = {}
-                               }: IconTextButtonProps) => {
+   icon,
+   text,
+   onPress,
+   iconColor = "white",
+   buttonColor = StylingConstants.colors.primary,
+   style = {}
+}: IconTextButtonProps) => {
     return <Button onPress={onPress} backgroundColor={buttonColor} style={style}>
         {/* @ts-ignore */}
         <FontAwesome name={icon} size={StylingConstants.iconSize} color={iconColor}/>

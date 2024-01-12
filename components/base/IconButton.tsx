@@ -11,11 +11,11 @@ type IconButtonProps = {
 }
 
 export const IconButton = ({
-                               icon,
-                               onPress,
-                               iconColor = StylingConstants.colors.primary,
-                               buttonPadding = StylingConstants.spacing.medium
-                           }: IconButtonProps) => {
+   icon,
+   onPress,
+   iconColor = StylingConstants.colors.primary,
+   buttonPadding = StylingConstants.spacing.medium
+}: IconButtonProps) => {
     return <Button
         onPress={onPress}
         backgroundColor={"transparent"}

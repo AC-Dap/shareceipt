@@ -1,4 +1,4 @@
-import {Receipt} from "../types/ReceiptTypes";
+import {Receipt} from "../types/ReceiptTypes.types";
 
 export const getReceiptSubtotal = (receipt: Receipt) => {
     return receipt.receipt.reduce((total, item) => total + item.priceCents, 0);

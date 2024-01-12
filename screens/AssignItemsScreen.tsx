@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "stretch",
-        width: "50%"
+        flex: 1
     },
     itemText: {
         fontSize: StylingConstants.fontSizes.medium,

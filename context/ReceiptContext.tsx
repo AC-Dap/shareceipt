@@ -1,4 +1,4 @@
-import {Person, Receipt, ReceiptItem} from "../types/ReceiptTypes";
+import {Person, Receipt, ReceiptItem} from "../types/ReceiptTypes.types";
 import {createContext, Dispatch, ReactNode, Reducer, useReducer} from "react";
 
 type AddActions = {
