@@ -5,6 +5,9 @@
     "description": "Simple Android app to help scan and fairly split a receipt",
     "githubUrl": "https://github.com/AC-Dap/shareceipt",
     "version": "2.0.0",
+    "updates": {
+      "enabled": false
+    },
     "platforms": [
       "android"
     ],
