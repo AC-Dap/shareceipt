@@ -13,7 +13,7 @@ Each person can be further renamed or removed by pressing on the three dots to t
 If this is a party that you are frequently with, you can easily save the list of people at the top left!
 Saved parties can then be loaded by pressing the people icon.
 
-<img src="demo/step1.gif" width="208" height="396" alt="Demo - Adding party members gif"/>
+<img src="demo/add-members.gif" width="180" height="370" alt="Demo - Adding party members gif"/>
 
 #### Step 2: Scan and edit your receipt
 
@@ -23,14 +23,14 @@ each item.
 Once the app has scanned your image, there may be some mistakes that you'll have to fix, either an incorrect price or a missing item.
 Once again, you can easily edit or remove an item by pressing the three dots to the right.
 
-<img src="demo/step2.gif" width="208" height="396" alt="Demo - Scanning and editing receipt gif"/>
+<img src="demo/scan-receipt.gif" width="180" height="370" alt="Demo - Scanning and editing receipt gif"/>
 
 #### Step 3: Edit the tip and tax
 Now that you have your receipt scanned, you can edit the tip and tax. 
 You can give either the percentage or the exact amount, depending on what you're given.
 At this point, you can double check that the total amount is correct, and make any further edits if needed.
 
-<img src="demo/step3.gif" width="208" height="396" alt="Demo - Editing tip and tax gif"/>
+<img src="demo/taxtip.gif" width="180" height="370" alt="Demo - Editing tip and tax gif"/>
 
 #### Step 4: Assign people to their items 
 Finally, you just need to assign each person to the items that they'll be paying for.
@@ -38,16 +38,23 @@ For items that everyone shared, just press the "Add all" button to split it amon
 For other items, simply select the names of the people who had it!
 Repeat this for every item on the receipt. 
 
-<img src="demo/step4.gif" width="208" height="396" alt="Demo - Assigning receipt items to party members gif"/>
+<img src="demo/assign-items.gif" width="180" height="370" alt="Demo - Assigning receipt items to party members gif"/>
 
 #### Step 5: You're done!
 Now, just read the amount each person needs to pay from beside their name, split fairly for everyone!
 If you want a breakdown of what exactly someone is paying for, just press their name to see the details.
 
+<img src="demo/results.gif" width="180" height="370" alt="Demo - Viewing results gif"/>
+
 ## Building
-As this project does have native Android code, you do need Android Studio installed to build and run the app.
-Luckily, Expo makes it a lot less painful to do so; once you have the dependencies installed with `npm install`, just
-run `npx expo run:android` to build and start up the app in your connected Android device/emulator.
+As this project uses native Android code to perform the OCR, you do need the Android SDK installed to build and run the app.
+Luckily, Expo makes it a lot less painful to do so; 
+just run these commands to build and start the app in your connected Android device/emulator.
+```
+npm run install
+npx expo prebuild 
+npx expo run:android
+```
 
 ## Technologies Used
 - [React Native](https://reactnative.dev/)
