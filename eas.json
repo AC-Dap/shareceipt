@@ -1,11 +1,12 @@
 {
   "cli": {
-    "version": ">= 0.52.0"
+    "version": ">= 6.0.0",
+    "requireCommit": true
   },
   "build": {
     "development": {
-      "developmentClient": true,
-      "distribution": "internal"
+      "distribution": "internal",
+      "developmentClient": true
     },
     "preview": {
       "distribution": "internal",
