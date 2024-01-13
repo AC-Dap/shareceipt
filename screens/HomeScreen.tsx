@@ -9,7 +9,7 @@ import {ScanReceiptScreen} from "./ScanReceiptScreen";
 import {AssignItemsScreen} from "./AssignItemsScreen";
 import {ResultsScreen} from "./ResultsScreen";
 import {ReceiptProvider} from "../context/ReceiptContext";
-import {BaseStyles, StylingConstants} from "../styling/BaseStyles";
+import {StylingConstants} from "../styling/BaseStyles";
 
 const styles = StyleSheet.create({
     container: {
@@ -28,6 +28,10 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         justifyContent: "space-between",
     },
+    footerButtonText: {
+        color: "white",
+        fontSize: StylingConstants.fontSizes.medium
+    }
 })
 
 export const HomeScreen = () => {
@@ -50,8 +54,8 @@ export const HomeScreen = () => {
                     label={"Prev step"}
                     onPress={decrementStep}
                     disabled={currentStep == 0}
-                    style={BaseStyles.button}
-                    labelStyle={BaseStyles.buttonText}
+                    backgroundColor={StylingConstants.colors.primary}
+                    labelStyle={styles.footerButtonText}
                 />
                 <PageControl
                     numOfPages={steps.length}
@@ -63,8 +67,8 @@ export const HomeScreen = () => {
                     label={"Next step"}
                     onPress={incrementStep}
                     disabled={currentStep == steps.length - 1}
-                    style={BaseStyles.button}
-                    labelStyle={BaseStyles.buttonText}
+                    backgroundColor={StylingConstants.colors.primary}
+                    labelStyle={styles.footerButtonText}
                 />
             </View>
         </View>

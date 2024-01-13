@@ -59,13 +59,6 @@ export const BaseStyles = StyleSheet.create({
         fontWeight: StylingConstants.fontWeights.medium,
         marginBottom: StylingConstants.spacing.small,
     },
-    button: {
-        backgroundColor: StylingConstants.colors.primary
-    },
-    buttonText: {
-        color: "white",
-        fontSize: StylingConstants.fontSizes.medium
-    },
     textInput: {
         borderBottomColor: StylingConstants.colors.secondary,
         borderBottomWidth: StylingConstants.borderWidth,
