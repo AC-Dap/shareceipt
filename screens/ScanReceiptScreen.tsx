@@ -96,6 +96,7 @@ export const ScanReceiptScreen = () => {
             renderItem={({index}) => <ReceiptItemCard itemIdx={index}/>}
             keyExtractor={(item, index) => `${item.name}-${index}`}
             ItemSeparatorComponent={() => <Divider fullWidth={false}/>}
+            removeClippedSubviews={false}
         />
 
         <View style={styles.footerContainer}>

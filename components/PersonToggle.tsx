@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
         backgroundColor: StylingConstants.colors.darkgrey
     },
     untoggled: {
-        backgroundColor: "white"
+        backgroundColor: "transparent"
     },
     personText: {
         fontSize: StylingConstants.fontSizes.medium,

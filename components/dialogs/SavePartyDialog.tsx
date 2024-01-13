@@ -23,6 +23,9 @@ const styles = StyleSheet.create({
     currentPartyMemberText: {
         fontSize: StylingConstants.fontSizes.medium,
         marginLeft: StylingConstants.spacing.small,
+    },
+    partyList: {
+        maxHeight: "50%"
     }
 });
 
@@ -80,8 +83,13 @@ export const SavePartyDialog = ({visible, closeDialog}: SavePartyDialogProps) =>
             />
 
             <Text style={styles.currentPartyText}>Current Party:</Text>
-            <FlatList data={receipt.party} renderItem={({item: person}) =>
-                <Text style={styles.currentPartyMemberText}>- {person}</Text>}/>
+            <FlatList
+                data={receipt.party}
+                renderItem={({item: person}) =>
+                    <Text style={styles.currentPartyMemberText}>- {person}</Text>
+                }
+                style={styles.partyList}
+            />
 
             {errorMessage !== "" && <>
                 <Text color={StylingConstants.colors.error}>An unexpected error has occurred:</Text>

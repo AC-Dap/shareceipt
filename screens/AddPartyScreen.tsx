@@ -49,6 +49,7 @@ export const AddPartyScreen = () => {
             renderItem={({index}) => <PersonCard personIdx={index}/>}
             keyExtractor={(item, index) => `${item}-${index}`}
             ItemSeparatorComponent={() => <Divider fullWidth={false}/>}
+            removeClippedSubviews={false}
         />
 
         <PersonDialog visible={showAddDialog} closeDialog={() => setShowAddDialog(false)}/>
